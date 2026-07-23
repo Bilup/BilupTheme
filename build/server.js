@@ -145,13 +145,30 @@ async function buildPages() {
     }
   }
 
+  // Compute relative prefix for static paths based on output depth
+  function staticPrefix(outputPath) {
+    const depth = outputPath.split('/').length - 1; // number of directory levels
+    return depth === 0 ? '.' : '../'.repeat(depth).replace(/\/$/, '');
+  }
+
+  // Fix absolute /static/ paths to relative ones in HTML
+  function fixStaticPaths(html, prefix) {
+    return html
+      .replace(/href="\/static\//g, `href="${prefix}/static/`)
+      .replace(/src="\/static\//g, `src="${prefix}/static/`);
+  }
+
   let ok = 0, fail = 0;
   for (const page of pages) {
     const tpl = path.join(VIEWS_DIR, `${page.template}.ejs`);
     const out = path.join(OUTPUT_DIR, page.output);
     try {
       ensureDir(path.dirname(out));
-      const html = await ejs.renderFile(tpl, page.data, { views: [VIEWS_DIR] });
+      const prefix = staticPrefix(page.output);
+      const dataWithRoot = { ...page.data, StaticRoot: prefix };
+      let html = await ejs.renderFile(tpl, dataWithRoot, { views: [VIEWS_DIR] });
+      // Ensure no absolute /static/ paths remain (safe post-processing)
+      html = fixStaticPaths(html, prefix);
       fs.writeFileSync(out, html, 'utf8');
       console.log(`  ✅  /${page.output.replace(/\/index\.html$/, '').replace(/\.html$/, '')}`);
       ok++;
