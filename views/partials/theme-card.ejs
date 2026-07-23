@@ -1,0 +1,78 @@
+<%
+// Expects: Theme, Mods, ShowAuthor, ShowActions, ShowDate, Users
+var theme = Theme;
+var mods = Mods;
+var showAuthor = ShowAuthor;
+var showActions = ShowActions;
+var showDate = ShowDate;
+var users = Users;
+%>
+<article class="theme-card" data-uuid="<%= theme.uuid %>" data-name="<%= theme.name %>" data-platform="<%= theme.platform %>" data-created-at="<%= theme.createdAt %>">
+    <div class="theme-card-header" style="<%= (theme.colors ? h.buildGradientFromColors(theme.colors) : (theme.accent ? h.buildGradientFromAccent(theme.accent) : '')) %>" <%- theme.colors ? 'data-colors=\'' + h.toJson(theme.colors) + '\'' : (theme.accent ? 'data-accent=\'' + h.toJson(theme.accent) + '\'' : '') %>>
+        <div class="theme-card-header-left">
+        </div>
+        <div class="theme-card-actions">
+            <a href="/themes/<%= theme.author %>/<%= h.slugify(theme.name) %>" class="view-btn" title="View Theme">
+                <i data-lucide="eye"></i>
+            </a>
+            <% if (showActions) { %>
+            <button class="rename-btn action-btn" title="Rename Theme" data-uuid="<%= theme.uuid %>" data-name="<%= theme.name %>" data-description="<%= theme.description %>">
+                <i data-lucide="edit"></i>
+            </button>
+            <button class="delete-btn action-btn" title="Delete Theme" data-uuid="<%= theme.uuid %>">
+                <i data-lucide="trash-2"></i>
+            </button>
+            <% } %>
+        </div>
+    </div>
+    <div class="theme-card-body">
+        <a href="/themes/<%= theme.author %>/<%= h.slugify(theme.name) %>" class="theme-name-link">
+            <h3 class="theme-name"><%= theme.name %></h3>
+        </a>
+        <p class="theme-description truncate"><%= theme.description ? theme.description : '&nbsp;' %></p>
+    </div>
+    <div class="theme-card-footer">
+        <% if (showAuthor) { %>
+        <% if (users && users[theme.author]) { %>
+        <% var author = users[theme.author]; %>
+        <div class="theme-author">
+            <a href="/u/<%= theme.author %>" class="author-link">
+                <% if (author.authType === 'scratch') { %>
+                    <% if (author.avatar) { %>
+                    <img src="<%= author.avatar %>" alt="<%= author.username %>" class="author-avatar">
+                    <% } else { %>
+                    <img src="<%= h.getScratchUserAvatarURL(author.username) %>" alt="<%= author.username %>" class="author-avatar">
+                    <% } %>
+                <% } else if (author.authType === 'rotur') { %>
+                <img src="https://avatars.rotur.dev/<%= author.username %>" alt="<%= author.username %>" class="author-avatar">
+                <% } else { %>
+                <div class="author-avatar avatar-placeholder"><%= author.username %></div>
+                <% } %>
+                <span class="author-name"><%= h.formatUsername(author.username, author.authType) %></span>
+            </a>
+        </div>
+        <% } %>
+        <% } %>
+        <div class="theme-stats">
+            <div class="stat">
+                <i data-lucide="heart"></i>
+                <span><%= (theme.likes || 0) - (theme.dislikes || 0) %></span>
+            </div>
+            <div class="stat">
+                <i data-lucide="download"></i>
+                <span><%= theme.downloads || 0 %></span>
+            </div>
+            <% if (mods && theme.platform) { %>
+            <% var mod = mods[theme.platform.toLowerCase()]; %>
+            <% if (mod) { %>
+            <a href="/themes?platform=<%= theme.platform.toLowerCase() %>" class="mod-icon-link" title="<%= mod.name %> (click to filter)">
+                <img src="<%= mod.icon %>" alt="<%= mod.name %>" class="mod-icon">
+            </a>
+            <% } %>
+            <% } %>
+            <% if (showDate) { %>
+            <span class="created-at"><%= h.formatDate(theme.createdAt) %></span>
+            <% } %>
+        </div>
+    </div>
+</article>

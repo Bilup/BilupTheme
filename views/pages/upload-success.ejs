@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Successful - BilupTheme</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        .success-container { max-width: 600px; margin: 0 auto; padding: 3rem 2rem; text-align: center; }
+        .success-icon { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #4c97ff, #9966ff); display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; }
+        .success-icon i { width: 40px; height: 40px; color: white; }
+        .success-title { font-size: 2rem; margin-bottom: 1rem; background: linear-gradient(135deg, #4c97ff, #9966ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .success-message { font-size: 1.1rem; color: var(--text-light); margin-bottom: 2rem; }
+        .theme-count { font-size: 3rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem; }
+        .theme-count-label { color: var(--text-light); margin-bottom: 2rem; }
+        .success-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .success-actions .btn { min-width: 150px; }
+    </style>
+</head>
+<body>
+    <%- include('../partials/nav', { ...locals }) %>
+    
+    <main class="main-content">
+        <div class="success-container">
+            <div class="success-icon"><i data-lucide="check"></i></div>
+            <h1 class="success-title">Upload Successful!</h1>
+            <p class="success-message">Your theme<%= ThemeCount > 1 ? 's' : '' %> <%= ThemeCount === 1 ? 'has' : 'have' %> been uploaded successfully.</p>
+            <div class="theme-count"><%= ThemeCount %></div>
+            <div class="theme-count-label">theme<%= ThemeCount > 1 ? 's' : '' %> uploaded</div>
+            <div class="success-actions">
+                <a href="/my-themes" class="btn primary"><i data-lucide="layout-grid"></i> View My Themes</a>
+                <a href="/upload" class="btn secondary"><i data-lucide="upload-cloud"></i> Upload More</a>
+                <a href="/themes" class="btn secondary"><i data-lucide="home"></i> Browse Themes</a>
+            </div>
+        </div>
+    </main>
+
+    <%- include('../partials/footer', { ...locals }) %>
+    <script src="/static/js/main.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

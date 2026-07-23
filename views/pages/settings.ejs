@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - BilupTheme</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>.settings-container .btn { border-radius: 50px; }</style>
+</head>
+<body>
+    <%- include('../partials/nav', { ...locals }) %>
+    
+    <main class="main-content">
+        <div class="settings-container">
+            <h1 class="settings-title"><i data-lucide="settings"></i> Settings</h1>
+
+            <div class="settings-section">
+                <div class="section-icon-wrapper"><i data-lucide="download"></i></div>
+                <div class="section-content">
+                    <h2 class="section-title">Download Your Themes</h2>
+                    <p class="section-description">Download all your themes as a ZIP file. This will include all your uploaded themes and their configurations.</p>
+                    <button id="download-all-btn" class="btn primary"><i data-lucide="download"></i> Download All Themes</button>
+                </div>
+            </div>
+
+            <div class="settings-section danger-zone">
+                <div class="section-icon-wrapper"><i data-lucide="alert-triangle"></i></div>
+                <div class="section-content">
+                    <h2 class="section-title">Danger Zone</h2>
+                    <p class="section-description">These actions are irreversible. Please be careful when performing these actions.</p>
+                    <div class="danger-zone-actions">
+                        <button id="delete-data-btn" class="btn danger"><i data-lucide="trash-2"></i> Delete All Themes & Data</button>
+                        <button id="logout-btn" class="btn danger"><i data-lucide="log-out"></i> Logout from Account</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <div id="confirm-modal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modal-title">Confirm Action</h2>
+                <button class="close-modal" id="close-modal"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body"><p id="modal-message">Are you sure you want to perform this action?</p></div>
+            <div class="modal-footer">
+                <button type="button" id="cancel-modal" class="btn secondary">Cancel</button>
+                <button type="button" id="confirm-modal-btn" class="btn danger">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/footer', { ...locals }) %>
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/settings.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+    "mods": {
+        "bilup": {
+            "id": "bilup",
+            "name": "Bilup",
+            "icon": "https://github.com/Bilup.png",
+            "previewUrl": "https://editor.bilup.org?theme={DOWNLOAD_URL}",
+            "previewUrlType": "download_url"
+        }
+    }
+}

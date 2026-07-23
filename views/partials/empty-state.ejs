@@ -1,0 +1,10 @@
+<%
+// Expects: icon, message, cta, ctaUrl, ctaText
+%>
+<div class="empty-state">
+    <i data-lucide="<%= typeof icon !== 'undefined' && icon ? icon : 'inbox' %>"></i>
+    <p><%= typeof message !== 'undefined' && message ? message : 'No data available' %></p>
+    <% if (typeof cta !== 'undefined' && cta) { %>
+    <a href="<%= ctaUrl || '#' %>" class="btn primary"><%= ctaText || 'Get Started' %></a>
+    <% } %>
+</div>

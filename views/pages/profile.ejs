@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= ProfileUser.username %>'s Profile - BilupTheme</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <%- include('../partials/nav', { ...locals }) %>
+
+    <main class="main-content">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <% if (AuthType === 'scratch') { %>
+                    <% if (ProfileUser.avatar) { %>
+                    <img src="<%= ProfileUser.avatar %>" alt="<%= ProfileUser.username %>">
+                    <% } else { %>
+                    <img src="<%= h.getScratchUserAvatarURL(ProfileUser.username) %>" alt="<%= ProfileUser.username %>">
+                    <% } %>
+                <% } else if (AuthType === 'rotur') { %>
+                <img src="https://avatars.rotur.dev/<%= ProfileUser.username %>" alt="<%= ProfileUser.username %>">
+                <% } %>
+            </div>
+            <div class="profile-info">
+                <h1 class="profile-name"><%= h.formatUsername(ProfileUser.username, AuthType) %></h1>
+                <p class="profile-meta">
+                    <span><i data-lucide="palette"></i> <%= Themes ? Themes.length : 0 %> theme(s)</span>
+                    <span><i data-lucide="calendar"></i> <%= h.formatDate(ProfileUser.createdAt) %></span>
+                </p>
+            </div>
+        </div>
+
+        <div class="profile-themes">
+            <h2>Themes</h2>
+            <% if (Themes && Themes.length > 0) { %>
+                <div class="themes-grid">
+                    <% Themes.forEach(function(theme) { %>
+                    <%- include('../partials/theme-card', { Theme: theme, Mods: Mods, ShowAuthor: false, ShowActions: false, ShowDate: false, Users: {} }) %>
+                    <% }); %>
+                </div>
+            <% } else if (IsOwnProfile) { %>
+                <%- include('../partials/empty-state', { icon: 'palette', message: "You haven't created any themes yet.", cta: true, ctaUrl: '/upload', ctaText: 'Create Your First Theme' }) %>
+            <% } else { %>
+                <%- include('../partials/empty-state', { icon: 'palette', message: "This user hasn't created any themes yet.", cta: false, ctaUrl: '', ctaText: '' }) %>
+            <% } %>
+        </div>
+    </main>
+
+    <%- include('../partials/footer', { ...locals }) %>
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/profile.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

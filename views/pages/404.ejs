@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BilupTheme - 404 Not Found</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <%- include('../partials/nav', { ...locals }) %>
+
+    <main class="main-content">
+        <div class="empty-state">
+            <i data-lucide="alert-circle"></i>
+            <h1>404 - Page Not Found</h1>
+            <p>The page you're looking for doesn't exist or has been moved.</p>
+            <a href="/themes" class="btn primary">Browse Themes</a>
+        </div>
+    </main>
+
+    <%- include('../partials/footer', { ...locals }) %>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

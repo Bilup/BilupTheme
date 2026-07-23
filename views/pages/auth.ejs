@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - BilupTheme</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <main class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <i data-lucide="palette" class="auth-logo"></i>
+                <h1>Welcome to BilupTheme</h1>
+                <p>Sign in with Rotur to upload, report, and manage themes</p>
+            </div>
+            
+            <div class="auth-providers">
+                <div class="auth-providers-header"><p>Login with</p></div>
+                <div class="auth-options">
+                    <a id="rotur-btn" href="https://rotur.dev/auth?return_to=" class="auth-btn rotur">
+                        <div class="auth-btn-logo"><img src="https://rotur.dev/favicon.ico" alt="Rotur"></div>
+                        <div class="auth-btn-content">
+                            <strong>Rotur</strong>
+                            <span>Seamless auth for web services</span>
+                        </div>
+                        <div class="auth-btn-arrow"><i data-lucide="arrow-right"></i></div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="auth-footer">
+                <a href="https://rotur.dev" target="_blank" class="auth-footer-link">Learn about Rotur</a>
+            </div>
+        </div>
+    </main>
+
+    <%- include('../partials/footer', { ...locals }) %>
+    <script src="/static/js/auth.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

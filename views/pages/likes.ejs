@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liked Themes - BilupTheme</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <%- include('../partials/nav', { ...locals }) %>
+
+    <main class="main-content">
+        <div id="themes-grid" class="themes-grid">
+            <% if (Themes && Themes.length > 0) { %>
+                <% Themes.forEach(function(theme) { %>
+                <%- include('../partials/theme-card', { Theme: theme, Mods: Mods, ShowAuthor: true, ShowActions: false, ShowDate: true, Users: Users }) %>
+                <% }); %>
+            <% } else { %>
+                <%- include('../partials/empty-state', { icon: 'heart', message: "You haven't liked any themes yet.", cta: true, ctaUrl: '/themes', ctaText: 'Browse Themes' }) %>
+            <% } %>
+        </div>
+    </main>
+
+    <%- include('../partials/footer', { ...locals }) %>
+    <script src="/static/js/main.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

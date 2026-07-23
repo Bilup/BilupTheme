@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Themes - BilupTheme</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <%- include('../partials/nav', { ...locals }) %>
+
+    <main class="main-content">
+        <div id="themes-grid" class="themes-grid">
+            <% if (Themes && Themes.length > 0) { %>
+                <% Themes.forEach(function(theme) { %>
+                <%- include('../partials/theme-card', { Theme: theme, Mods: Mods, ShowAuthor: false, ShowActions: true, ShowDate: true, Users: Users }) %>
+                <% }); %>
+            <% } else { %>
+                <%- include('../partials/empty-state', { icon: 'palette', message: "You haven't created any themes yet.", cta: true, ctaUrl: '/upload', ctaText: 'Create Your First Theme' }) %>
+            <% } %>
+        </div>
+
+        <div id="rename-modal" class="modal-overlay" style="display: none;">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2>Rename Theme</h2>
+                    <button class="close-modal" id="close-modal">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="rename-name">Theme Name *</label>
+                        <input type="text" id="rename-name" name="rename-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rename-description">Description</label>
+                        <textarea id="rename-description" name="rename-description"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="cancel-rename" class="btn secondary">Cancel</button>
+                    <button type="button" id="save-rename" class="btn primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <%- include('../partials/footer', { ...locals }) %>
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/my-themes.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

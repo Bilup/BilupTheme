@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= Theme.name %> - BilupTheme</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <%- include('../partials/nav', { ...locals }) %>
+    
+    <main class="main-content">
+        <div class="theme-detail-layout">
+            <div class="theme-detail-main">
+                <div class="theme-detail-banner" id="theme-banner" style="<%= Theme.theme && Theme.theme.colors ? h.buildGradientFromColors(Theme.theme.colors) : (Theme.theme && Theme.theme.accent ? h.buildGradientFromAccent(Theme.theme.accent) : '') %>" <%- Theme.theme && Theme.theme.colors ? 'data-colors=\'' + h.toJson(Theme.theme.colors) + '\'' : (Theme.theme && Theme.theme.accent ? 'data-accent=\'' + h.toJson(Theme.theme.accent) + '\'' : '') %>></div>
+                
+                <div class="theme-detail-content">
+                    <div class="theme-preview-colors" id="preview-colors">
+                        <% if (Theme.theme && Theme.theme.colors && Theme.theme.colors.gradient) { %>
+                            <% Theme.theme.colors.gradient.forEach(function(c) { %>
+                                <div class="preview-color-dot" style="background-color: <%= c.color %>"></div>
+                            <% }); %>
+                        <% } else if (Theme.theme && Theme.theme.accent && Theme.theme.accent.colors) { %>
+                            <% Theme.theme.accent.colors.forEach(function(c) { %>
+                                <div class="preview-color-dot" style="background-color: <%= c.color %>"></div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="preview-color-dot" style="background-color: #4c97ff"></div>
+                            <div class="preview-color-dot" style="background-color: #9966ff"></div>
+                        <% } %>
+                    </div>
+                    
+                    <div class="theme-header-section">
+                        <div class="theme-title-group">
+                            <h1 class="theme-title"><%= Theme.name %></h1>
+                            <div class="theme-meta">
+                                <% if (ModData) { %>
+                                <a href="/themes?platform=<%= Platform %>" class="mod-info">
+                                    <img src="<%= ModData.icon %>" alt="<%= ModData.name %>" class="mod-icon">
+                                    <span><%= ModData.name %></span>
+                                </a>
+                                <% } %>
+                                <span class="created-at">
+                                    <i data-lucide="clock"></i>
+                                    <%= Theme.createdAt ? h.formatDate(Theme.createdAt) : (Theme.theme && Theme.theme.createdAt ? h.formatDate(Theme.theme.createdAt) : 'Unknown') %>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="theme-actions">
+                            <% if (Mods) { %>
+                            <div class="export-dropdown">
+                                <button class="btn secondary export-dropdown-toggle" id="export-dropdown-btn">
+                                    <i data-lucide="download"></i>
+                                    Export
+                                    <i data-lucide="chevron-down"></i>
+                                </button>
+                                <div class="export-dropdown-menu" id="export-dropdown-menu">
+                                    <% Object.keys(Mods).forEach(function(id) { var m = Mods[id]; %>
+                                    <button class="export-option" data-platform="<%= id %>" data-theme-uuid="<%= ThemeUUID %>">
+                                        <img src="<%= m.icon %>" alt="<%= m.name %>" class="mod-icon-small">
+                                        <span>Export for <%= m.name %></span>
+                                    </button>
+                                    <% }); %>
+                                </div>
+                            </div>
+                            <% } %>
+                            <button class="download-stat-btn" title="Downloads">
+                                <i data-lucide="download"></i>
+                                <span><%= h.formatNumber(Downloads) %></span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="theme-rating-actions">
+                        <% if (Authenticated) { %>
+                        <button class="rating-btn like <%= UserRating === 'like' ? 'active' : '' %>" data-rating="like" title="Like this theme">
+                            <i data-lucide="thumbs-up"></i>
+                            <span><%= h.formatNumber(Ratings.likes) %></span>
+                        </button>
+                        <button class="rating-btn dislike <%= UserRating === 'dislike' ? 'active' : '' %>" data-rating="dislike" title="Dislike this theme">
+                            <i data-lucide="thumbs-down"></i>
+                            <span><%= h.formatNumber(Ratings.dislikes) %></span>
+                        </button>
+                        <% } else { %>
+                        <button class="rating-btn like disabled" data-rating="like" title="Log in to like themes" disabled>
+                            <i data-lucide="thumbs-up"></i>
+                            <span><%= h.formatNumber(Ratings.likes) %></span>
+                        </button>
+                        <button class="rating-btn dislike disabled" data-rating="dislike" title="Log in to dislike themes" disabled>
+                            <i data-lucide="thumbs-down"></i>
+                            <span><%= h.formatNumber(Ratings.dislikes) %></span>
+                        </button>
+                        <% } %>
+                    </div>
+                    
+                    <div class="theme-description">
+                        <h2>Description</h2>
+                        <p><%= (Theme.description || (Theme.theme && Theme.theme.description)) ? (Theme.description || Theme.theme.description) : 'No description provided.' %></p>
+                    </div>
+                    
+                    <% if (Theme.theme && Theme.theme.platformData && Theme.theme.platformData.mistwarp) { %>
+                    <div class="theme-specs">
+                        <h2>MistWarp Settings</h2>
+                        <div class="spec-grid">
+                            <% if (Theme.theme.platformData.mistwarp.gui) { %>
+                            <div class="spec-item">
+                                <div class="spec-label">GUI Mode</div>
+                                <div class="spec-value"><%= Theme.theme.platformData.mistwarp.gui %></div>
+                            </div>
+                            <% } %>
+                            <% if (Theme.theme.platformData.mistwarp.blocks) { %>
+                            <div class="spec-item">
+                                <div class="spec-label">Blocks Style</div>
+                                <div class="spec-value"><%= Theme.theme.platformData.mistwarp.blocks %></div>
+                            </div>
+                            <% } %>
+                            <% if (Theme.theme.platformData.mistwarp.menuBarAlign) { %>
+                            <div class="spec-item">
+                                <div class="spec-label">Menu Alignment</div>
+                                <div class="spec-value"><%= Theme.theme.platformData.mistwarp.menuBarAlign %></div>
+                            </div>
+                            <% } %>
+                        </div>
+                    </div>
+                    <% } %>
+                    
+                    <% if (Theme.theme && Theme.theme.wallpaper && Theme.theme.wallpaper.url) { %>
+                    <div class="theme-wallpaper">
+                        <h2>Wallpaper</h2>
+                        <div class="wallpaper-preview">
+                            <img src="<%= Theme.theme.wallpaper.url %>" alt="Wallpaper" loading="lazy">
+                        </div>
+                        <div class="wallpaper-info">
+                            <% if (Theme.theme.wallpaper.opacity) { %>
+                            <span>Opacity: <%= Theme.theme.wallpaper.opacity %></span>
+                            <% } %>
+                            <% if (Theme.theme.wallpaper.darkness) { %>
+                            <span>Darkness: <%= Theme.theme.wallpaper.darkness %></span>
+                            <% } %>
+                        </div>
+                    </div>
+                    <% } else if (Theme.theme && Theme.theme.wallpaper) { %>
+                    <div class="theme-wallpaper">
+                        <h2>Wallpaper</h2>
+                        <p>Wallpaper configured but no URL specified</p>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+            
+            <% if (AuthorUser && AuthorUser.username && AuthorAuthType) { %>
+            <aside class="author-sidebar">
+                <div class="author-card">
+                    <div class="author-avatar-wrapper">
+                        <% if (AuthorAuthType === 'scratch') { %>
+                            <% if (AuthorUser.avatar) { %>
+                            <img src="<%= AuthorUser.avatar %>" alt="<%= AuthorUser.username %>" class="author-avatar-large">
+                            <% } else { %>
+                            <img src="<%= h.getScratchUserAvatarURL(AuthorUser.username) %>" alt="<%= AuthorUser.username %>" class="author-avatar-large">
+                            <% } %>
+                        <% } else if (AuthorAuthType === 'rotur') { %>
+                        <img src="https://avatars.rotur.dev/<%= AuthorUser.username %>" alt="<%= AuthorUser.username %>" class="author-avatar-large">
+                        <% } %>
+                    </div>
+                    <h3 class="author-name"><%= h.formatUsername(AuthorUser.username, AuthorAuthType) %></h3>
+                    <a href="/profile?userId=<%= Theme.author %>&authType=<%= AuthorAuthType %>" class="view-profile-link">View Profile</a>
+                    
+                    <div class="author-stats">
+                        <div class="stat-item">
+                            <div class="stat-value"><%= AuthorThemeCount %></div>
+                            <div class="stat-label">Themes</div>
+                        </div>
+                        <% if (AuthorJoinDate) { %>
+                        <div class="stat-item">
+                            <div class="stat-value"><i data-lucide="calendar"></i></div>
+                            <div class="stat-label">Joined <%= AuthorJoinDate %></div>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+                
+                <% if (IsOwner) { %>
+                <div class="author-card actions-card">
+                    <h3>Actions</h3>
+                    <div class="theme-actions vertical">
+                        <button id="edit-theme-btn" class="btn secondary" data-uuid="<%= ThemeUUID %>" data-name="<%= Theme.name %>" data-description="<%= Theme.description %>">
+                            <i data-lucide="edit"></i>
+                            Edit
+                        </button>
+                        <button id="delete-btn" class="btn danger" data-uuid="<%= ThemeUUID %>">
+                            <i data-lucide="trash-2"></i>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+                <% } %>
+            </aside>
+            <% } %>
+        </div>
+    </main>
+
+    <%- include('../partials/footer', { ...locals }) %>
+
+    <%- include('../partials/edit-theme') %>
+
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/theme-detail.js"></script>
+    <script src="/static/js/edit-theme-modal.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const banner = document.getElementById('theme-banner');
+        if (!banner) return;
+        let colorsArray = [];
+        const colorsData = banner.dataset.colors;
+        const accentData = banner.dataset.accent;
+        try {
+            let colors;
+            if (colorsData) {
+                colors = JSON.parse(colorsData);
+                if (colors.gradient && Array.isArray(colors.gradient)) colorsArray = colors.gradient;
+            } else if (accentData) {
+                colors = JSON.parse(accentData);
+                if (colors.colors && Array.isArray(colors.colors)) colorsArray = colors.colors;
+            }
+            if (colorsArray.length >= 2) {
+                const sortedColors = [...colorsArray].sort((a, b) => (a.position || 0) - (b.position || 0));
+                banner.style.background = `linear-gradient(135deg, ${sortedColors[0].color}, ${sortedColors[sortedColors.length - 1].color})`;
+            }
+        } catch (e) { console.debug('Failed to parse color data:', e); }
+    });
+</script>
+</html>

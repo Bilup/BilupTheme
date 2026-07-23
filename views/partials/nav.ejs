@@ -1,0 +1,68 @@
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="/themes" class="nav-brand">BilupTheme</a>
+        
+        <div class="nav-links">
+            <a href="/" class="nav-link <%= ActivePage === 'home' ? 'active' : '' %>">
+                <i data-lucide="home"></i>
+                <span>Home</span>
+            </a>
+            <a href="/themes" class="nav-link <%= ActivePage === 'themes' ? 'active' : '' %>">
+                <i data-lucide="layout-grid"></i>
+                <span>Themes</span>
+            </a>
+            
+            <% if (Authenticated) { %>
+            <a href="/my-themes" class="nav-link <%= ActivePage === 'my-themes' ? 'active' : '' %>">
+                <i data-lucide="folder-open"></i>
+                <span>My Themes</span>
+            </a>
+            <a href="/upload" class="nav-link <%= ActivePage === 'upload' ? 'active' : '' %>">
+                <i data-lucide="upload"></i>
+                <span>Upload</span>
+            </a>
+            
+            <% if (User) { %>
+            <div class="nav-user-dropdown">
+                <button id="user-menu-btn" class="nav-user-btn">
+                    <% if (AuthType === 'scratch') { %>
+                        <% if (User.avatar) { %>
+                        <img src="<%= User.avatar %>" alt="<%= User.username %>" class="nav-avatar">
+                        <% } else { %>
+                        <img src="<%= h.getScratchUserAvatarURL(User.username) %>" alt="<%= User.username %>" class="nav-avatar">
+                        <% } %>
+                    <% } else if (AuthType === 'rotur') { %>
+                    <img src="https://avatars.rotur.dev/<%= User.username %>" alt="<%= User.username %>" class="nav-avatar">
+                    <% } %>
+                    <span class="nav-username"><%= h.formatUsername(User.username, AuthType) %></span>
+                    <i data-lucide="chevron-down" class="dropdown-icon"></i>
+                </button>
+                <div class="dropdown-menu" id="dropdown-menu" style="display: none;">
+                    <a href="/profile?userId=<%= UserId %>&authType=<%= AuthType %>" class="dropdown-item <%= ActivePage === 'profile' ? 'active' : '' %>">
+                        <i data-lucide="user"></i>
+                        <span>Profile</span>
+                    </a>
+                    <a href="/likes" class="dropdown-item <%= ActivePage === 'likes' ? 'active' : '' %>">
+                        <i data-lucide="heart"></i>
+                        <span>Liked Themes</span>
+                    </a>
+                    <a href="/settings" class="dropdown-item <%= ActivePage === 'settings' ? 'active' : '' %>">
+                        <i data-lucide="settings"></i>
+                        <span>Settings</span>
+                    </a>
+                    <a href="/logout" class="dropdown-item dropdown-logout">
+                        <i data-lucide="log-out"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+            <% } %>
+            <% } else { %>
+            <a href="/auth" class="nav-link nav-login <%= ActivePage === 'auth' ? 'active' : '' %>">
+                <i data-lucide="log-in"></i>
+                <span>Login</span>
+            </a>
+            <% } %>
+        </div>
+    </div>
+</nav>
