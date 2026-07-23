@@ -36,7 +36,7 @@ window.addEventListener('load', async function () {
   const key = "BilupTheme";
 
   if (token) {
-    const validator = await fetch("https://social.rotur.dev/generate_validator?key=" + encodeURIComponent(key) + "&auth=" + encodeURIComponent(token))
+    const validator = await fetch("https://api.rotur.dev/generate_validator?key=" + encodeURIComponent(key) + "&auth=" + encodeURIComponent(token))
       .then(v => v.json())
       .then(v => v.validator);
 

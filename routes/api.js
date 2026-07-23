@@ -34,21 +34,33 @@ router.get('/auth', async (req, res) => {
 
   try {
     const https = require('https');
-    const url = `https://social.rotur.dev/verify?validator=${encodeURIComponent(v)}&key=BilupTheme`;
-    
-    const response = await new Promise((resolve, reject) => {
+    const url = `https://api.rotur.dev/v2/validators/verify?v=${encodeURIComponent(v)}&key=BilupTheme`;
+
+    const rawData = await new Promise((resolve, reject) => {
       https.get(url, (resp) => {
         let data = '';
         resp.on('data', chunk => data += chunk);
-        resp.on('end', () => resolve(JSON.parse(data)));
+        resp.on('end', () => resolve(data));
       }).on('error', reject);
     });
 
-    if (!response.ok) {
-      return res.status(401).json({ ok: false, error: 'auth failed' });
+    // Validate JSON before parsing
+    let response;
+    try {
+      response = JSON.parse(rawData);
+    } catch {
+      return res.status(502).json({
+        ok: false,
+        error: 'Rotur auth server returned invalid response',
+        detail: rawData
+      });
     }
 
-    const userId = response.user_id || response.username;
+    if (!response.valid) {
+      return res.status(401).json({ ok: false, error: response.error || 'auth failed' });
+    }
+
+    const userId = response.id || response.username;
     const authType = 'rotur';
     const userData = { username: userId, authType: 'rotur', avatar: '' };
 

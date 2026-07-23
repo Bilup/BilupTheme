@@ -145,18 +145,37 @@ async function buildPages() {
     }
   }
 
+  // Fix absolute /static/ paths in CSS (fonts, images) to be relative to css/ dir
+  function fixCSSFile(cssPath) {
+    if (!fs.existsSync(cssPath)) return;
+    let css = fs.readFileSync(cssPath, 'utf8');
+    // CSS is at static/css/, so fonts at ../fonts/
+    const hadFonts = css.includes("url('/static/fonts/");
+    css = css.replace(/url\('\/static\/fonts\//g, "url('../fonts/");
+    css = css.replace(/url\("\/static\/fonts\//g, 'url("../fonts/');
+    // Fix any other /static/ URLs in CSS
+    css = css.replace(/url\('\/static\//g, "url('../");
+    css = css.replace(/url\("\/static\//g, 'url("../');
+    fs.writeFileSync(cssPath, css, 'utf8');
+    if (hadFonts) console.log('  🖋️  Fixed font paths in CSS');
+  }
+
   // Compute relative prefix for static paths based on output depth
   function staticPrefix(outputPath) {
-    const depth = outputPath.split('/').length - 1; // number of directory levels
-    return depth === 0 ? '.' : '../'.repeat(depth).replace(/\/$/, '');
+    const depth = outputPath.split('/').length - 1;
+    return depth === 0 ? '' : '../'.repeat(depth).replace(/\/$/, '');
   }
 
   // Fix absolute /static/ paths to relative ones in HTML
   function fixStaticPaths(html, prefix) {
+    const p = prefix ? prefix + '/' : '';
     return html
-      .replace(/href="\/static\//g, `href="${prefix}/static/`)
-      .replace(/src="\/static\//g, `src="${prefix}/static/`);
+      .replace(/href="\/static\//g, `href="${p}static/`)
+      .replace(/src="\/static\//g, `src="${p}static/`);
   }
+
+  // Fix font paths in copied CSS
+  fixCSSFile(path.join(OUTPUT_DIR, 'static', 'css', 'styles.css'));
 
   let ok = 0, fail = 0;
   for (const page of pages) {
