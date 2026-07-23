@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BilupTheme - Share Your Themes</title>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="/static/css/styles.css">
     <style>
         body { background: var(--bg-color); }
@@ -24,25 +24,6 @@
         .feature-card p { color: var(--text-light); line-height: 1.7; font-size: 0.95rem; }
         .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 0.75rem; color: var(--text-color); font-weight: 700; }
         .section-subtitle { text-align: center; color: var(--text-light); font-size: 1.1rem; }
-        .supported-mods { max-width: 1400px; margin: 4rem auto; padding: 0 2rem; text-align: center; }
-        .mod-carousel-container { position: relative; margin-top: 3rem; text-align: center; }
-        .mod-carousel-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; background: var(--card-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; transition: var(--transition); color: var(--text-color); border: 1px solid var(--border-color); }
-        .mod-carousel-arrow:hover { background: var(--primary-color); color: white; }
-        .mod-carousel-arrow.prev { left: -25px; }
-        .mod-carousel-arrow.next { right: -25px; }
-        .mod-carousel-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
-        .mod-scroller { display: flex; gap: 2rem; overflow-x: auto; padding: 1rem 3rem; margin-top: 0; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-        .mod-scroller::-webkit-scrollbar { display: none; }
-        .mod-screenshot-card { flex: 0 0 auto; width: 680px; background: var(--card-bg); border-radius: 10px; overflow: hidden; transition: var(--transition); padding: 1rem; }
-        .mod-screenshot-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-        .mod-screenshot-img { width: 100%; object-fit: cover; display: block; }
-        .mod-screenshot-placeholder { width: 100%; height: 300px; background: var(--bg-color); display: flex; align-items: center; justify-content: center; text-align: center; }
-        .mod-screenshot-placeholder .placeholder-text { color: var(--text-light); font-size: 1.1rem; text-align: center; padding: 2rem; }
-        .mod-pill { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: var(--bg-color); border-radius: 25px; font-size: 0.95rem; color: var(--text-color); font-weight: 600; margin: 1rem 1.25rem 1.25rem; }
-        .mod-pill img { width: 22px; height: 22px; border-radius: 6px; object-fit: contain; }
-        .carousel-dots { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1.5rem; }
-        .carousel-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border-color); cursor: pointer; transition: var(--transition); }
-        .carousel-dot.active { background: var(--primary-color); }
         .auth-cta { max-width: 800px; margin: 6rem auto; padding: 3.5rem 2.5rem; background: var(--card-bg); border-radius: 24px; text-align: center; }
         .auth-cta h2 { font-size: 2rem; margin-bottom: 1rem; color: var(--text-color); font-weight: 700; }
         .auth-cta p { color: var(--text-light); font-size: 1.1rem; margin-bottom: 2rem; background: var(--bg-color); padding: 0.75rem 1.5rem; border-radius: 10px; display: inline-block; }
@@ -56,12 +37,6 @@
             .hero { padding: 4rem 1.5rem 2.5rem; }
             .hero h1 { font-size: 2.8rem; }
             .hero p { font-size: 1.15rem; }
-            .mod-carousel-arrow { display: none; }
-            .mod-scroller { gap: 1.5rem; padding: 1rem; }
-            .mod-screenshot-card { width: 320px; }
-            .mod-screenshot-img { height: 240px; }
-            .mod-screenshot-placeholder { height: 240px; }
-            .auth-buttons { flex-direction: column; }
             .auth-btn { width: 100%; justify-content: center; }
             .auth-cta { padding: 2.5rem 1.5rem; }
         }
@@ -83,50 +58,6 @@
                     <i data-lucide="search"></i>
                     Browse Themes
                 </a>
-            </div>
-        </section>
-
-        <section class="supported-mods">
-            <h2 class="section-title">Supported Mods</h2>
-            <p class="section-subtitle">Powering customization across your favorite platforms</p>
-
-            <div class="mod-carousel-container">
-                <button class="mod-carousel-arrow prev" id="carousel-prev">
-                    <i data-lucide="chevron-left"></i>
-                </button>
-                <div class="mod-scroller" id="mod-scroller">
-                    <div class="mod-screenshot-card">
-                        <img src="/static/screenshots/mistwarp.png" alt="MistWarp" class="mod-screenshot-img" onerror="this.style.display='none'; this.parentElement.querySelector('.mod-screenshot-placeholder').style.display='flex';">
-                        <div class="mod-screenshot-placeholder" style="display: none;">
-                            <span class="placeholder-text">
-                                <i data-lucide="monitor" style="width: 40px; height: 40px; margin-bottom: 0.75rem; display: block;"></i>
-                                Screenshot Coming Soon
-                            </span>
-                        </div>
-                        <div class="mod-pill">
-                            <img src="https://github.com/MistWarp.png" alt="MistWarp">
-                            <span>MistWarp</span>
-                        </div>
-                    </div>
-
-                    <div class="mod-screenshot-card">
-                        <img src="/static/screenshots/nitrobolt.png" alt="NitroBolt" class="mod-screenshot-img" onerror="this.style.display='none'; this.parentElement.querySelector('.mod-screenshot-placeholder').style.display='flex';">
-                        <div class="mod-screenshot-placeholder" style="display: none;">
-                            <span class="placeholder-text">
-                                <i data-lucide="zap" style="width: 40px; height: 40px; margin-bottom: 0.75rem; display: block;"></i>
-                                Screenshot Coming Soon
-                            </span>
-                        </div>
-                        <div class="mod-pill">
-                            <img src="https://github.com/Nitro-Bolt.png" alt="NitroBolt">
-                            <span>NitroBolt</span>
-                        </div>
-                    </div>
-                </div>
-                <button class="mod-carousel-arrow next" id="carousel-next">
-                    <i data-lucide="chevron-right"></i>
-                </button>
-                <div class="carousel-dots" id="carousel-dots"></div>
             </div>
         </section>
 
@@ -178,55 +109,6 @@
     <%- include('../partials/footer', { ...locals }) %>
 
     <script src="/static/js/main.js"></script>
-    <script>
-        lucide.createIcons();
-        document.addEventListener('DOMContentLoaded', function() {
-            const scroller = document.getElementById('mod-scroller');
-            const prevBtn = document.getElementById('carousel-prev');
-            const nextBtn = document.getElementById('carousel-next');
-            const dotsContainer = document.getElementById('carousel-dots');
-            const cards = scroller.querySelectorAll('.mod-screenshot-card');
-            let currentIndex = 0;
-            const cardWidth = cards[0] ? cards[0].offsetWidth + 32 : 712;
-            let autoScrollInterval;
-
-            function updateCarousel() {
-                scroller.scrollTo({ left: currentIndex * cardWidth, behavior: 'smooth' });
-                updateDots(); updateButtons();
-            }
-            function updateDots() {
-                dotsContainer.querySelectorAll('.carousel-dot').forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
-            }
-            function updateButtons() {
-                prevBtn.disabled = currentIndex === 0;
-                nextBtn.disabled = currentIndex >= cards.length - 1;
-            }
-            function createDots() {
-                cards.forEach((_, index) => {
-                    const dot = document.createElement('div');
-                    dot.className = 'carousel-dot' + (index === 0 ? ' active' : '');
-                    dot.addEventListener('click', () => { currentIndex = index; updateCarousel(); resetAutoScroll(); });
-                    dotsContainer.appendChild(dot);
-                });
-            }
-            function nextSlide() {
-                currentIndex = currentIndex < cards.length - 1 ? currentIndex + 1 : 0;
-                updateCarousel();
-            }
-            function prevSlide() {
-                if (currentIndex > 0) { currentIndex--; updateCarousel(); }
-            }
-            function startAutoScroll() { autoScrollInterval = setInterval(nextSlide, 4000); }
-            function resetAutoScroll() { clearInterval(autoScrollInterval); startAutoScroll(); }
-
-            if (cards.length > 0) {
-                prevBtn.addEventListener('click', () => { prevSlide(); resetAutoScroll(); });
-                nextBtn.addEventListener('click', () => { nextSlide(); resetAutoScroll(); });
-                scroller.addEventListener('mouseenter', () => clearInterval(autoScrollInterval));
-                scroller.addEventListener('mouseleave', () => startAutoScroll());
-                createDots(); updateButtons(); startAutoScroll();
-            }
-        });
-    </script>
+    <script>lucide.createIcons();</script>
 </body>
 </html>
