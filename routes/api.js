@@ -1,10 +1,63 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
+const https = require('https');
 const storage = require('../utils/storage');
 const converter = require('../utils/theme-converter');
 const authModule = require('../middleware/auth');
 const { requireAuth, requireAdmin } = authModule;
+
+// Helper: HTTPS GET → raw body string (accepts URL string or URL instance)
+function httpGet(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (resp) => {
+      let data = '';
+      resp.on('data', chunk => data += chunk);
+      resp.on('end', () => resolve(data));
+    }).on('error', reject);
+  });
+}
+
+// Helper: HTTPS POST (JSON body) → raw body string
+function httpPost(url, body) {
+  return new Promise((resolve, reject) => {
+    const u = new URL(url);
+    const payload = JSON.stringify(body);
+    const options = {
+      hostname: u.hostname,
+      port: 443,
+      path: u.pathname + u.search,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload),
+        'Accept': 'application/json'
+      }
+    };
+    const req = https.request(options, (resp) => {
+      let data = '';
+      resp.on('data', chunk => data += chunk);
+      resp.on('end', () => resolve(data));
+    });
+    req.on('error', reject);
+    req.write(payload);
+    req.end();
+  });
+}
+
+// Shared: create or update user session
+function createUserSession(res, userId, authType, userData) {
+  storage.ensureDirectories();
+  storage.createOrUpdateUser(userId, authType, userData);
+  const sessionId = storage.createSession(userId, authType, userData);
+  res.cookie('auth_token', sessionId, {
+    httpOnly: true,
+    sameSite: 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    path: '/'
+  });
+  return sessionId;
+}
 
 // Load mods
 const mods = require(path.join(__dirname, '..', 'mods.json')).mods;
@@ -27,53 +80,60 @@ router.get('/user', (req, res) => {
   res.json({ ok: true, user: req.user, authType: req.authType, userId: req.userId, isAdmin: req.isAdmin });
 });
 
-// Rotur Auth
+// Rotur Auth — login: generate validator from token, then verify
+router.post('/auth/login', async (req, res) => {
+  const token = req.body?.token || req.query?.token;
+  if (!token) return res.status(400).json({ ok: false, error: 'missing token' });
+
+  try {
+    // Step 1: exchange token for validator
+    const generateUrl = `https://api.rotur.dev/generate_validator?key=BilupTheme&auth=${encodeURIComponent(token)}`;
+    const genData = await httpGet(generateUrl);
+    const genJson = JSON.parse(genData);
+    const validator = genJson.validator;
+    if (!validator) {
+      return res.status(502).json({ ok: false, error: 'failed to generate validator', detail: genData.slice(0, 200) });
+    }
+
+    // Step 2: verify validator
+    const verifyUrl = `https://api.rotur.dev/v2/validators/verify?v=${encodeURIComponent(validator)}&key=BilupTheme`;
+    const verData = await httpGet(verifyUrl);
+    const verJson = JSON.parse(verData);
+
+    if (!verJson.valid) {
+      return res.status(401).json({ ok: false, error: verJson.error || 'auth failed' });
+    }
+
+    // Use response.id as internal userId, response.username as display name
+    const userId = verJson.id;
+    const displayName = verJson.username || userId;
+    const userData = { username: displayName, userId: userId, authType: 'rotur', avatar: '' };
+    createUserSession(res, userId, 'rotur', userData);
+
+    res.json({ ok: true, username: displayName });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: 'auth error: ' + err.message });
+  }
+});
+
+// Rotur Auth — verify (legacy, for direct validator call)
 router.get('/auth', async (req, res) => {
   const v = req.query.v;
   if (!v) return res.status(400).json({ ok: false, error: 'missing validator' });
 
   try {
-    const https = require('https');
-    const url = `https://api.rotur.dev/v2/validators/verify?v=${encodeURIComponent(v)}&key=BilupTheme`;
-
-    const rawData = await new Promise((resolve, reject) => {
-      https.get(url, (resp) => {
-        let data = '';
-        resp.on('data', chunk => data += chunk);
-        resp.on('end', () => resolve(data));
-      }).on('error', reject);
-    });
-
-    // Validate JSON before parsing
-    let response;
-    try {
-      response = JSON.parse(rawData);
-    } catch {
-      return res.status(502).json({
-        ok: false,
-        error: 'Rotur auth server returned invalid response',
-        detail: rawData
-      });
-    }
+    const verifyUrl = `https://api.rotur.dev/v2/validators/verify?v=${encodeURIComponent(v)}&key=BilupTheme`;
+    const rawData = await httpGet(verifyUrl);
+    const response = JSON.parse(rawData);
 
     if (!response.valid) {
       return res.status(401).json({ ok: false, error: response.error || 'auth failed' });
     }
 
-    const userId = response.id || response.username;
-    const authType = 'rotur';
-    const userData = { username: userId, authType: 'rotur', avatar: '' };
-
-    storage.ensureDirectories();
-    storage.createOrUpdateUser(userId, authType, userData);
-    const sessionId = storage.createSession(userId, authType, userData);
-
-    res.cookie('auth_token', sessionId, {
-      httpOnly: true,
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: '/'
-    });
+    const userId = response.id;
+    const displayName = response.username || userId;
+    const userData = { username: displayName, userId: userId, authType: 'rotur', avatar: '' };
+    createUserSession(res, userId, 'rotur', userData);
 
     res.json({ ok: true });
   } catch (err) {

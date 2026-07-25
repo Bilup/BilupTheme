@@ -22,6 +22,8 @@
                     <% } %>
                 <% } else if (AuthType === 'rotur') { %>
                 <img src="https://avatars.rotur.dev/<%= ProfileUser.username %>" alt="<%= ProfileUser.username %>">
+                <% } else if (AuthType === 'github' && ProfileUser.avatar) { %>
+                <img src="<%= ProfileUser.avatar %>" alt="<%= ProfileUser.username %>">
                 <% } %>
             </div>
             <div class="profile-info">

@@ -163,6 +163,8 @@
                             <% } %>
                         <% } else if (AuthorAuthType === 'rotur') { %>
                         <img src="https://avatars.rotur.dev/<%= AuthorUser.username %>" alt="<%= AuthorUser.username %>" class="author-avatar-large">
+                        <% } else if (AuthorAuthType === 'github' && AuthorUser.avatar) { %>
+                        <img src="<%= AuthorUser.avatar %>" alt="<%= AuthorUser.username %>" class="author-avatar-large">
                         <% } %>
                     </div>
                     <h3 class="author-name"><%= h.formatUsername(AuthorUser.username, AuthorAuthType) %></h3>

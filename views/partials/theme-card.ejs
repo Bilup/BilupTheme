@@ -45,6 +45,8 @@ var users = Users;
                     <% } %>
                 <% } else if (author.authType === 'rotur') { %>
                 <img src="https://avatars.rotur.dev/<%= author.username %>" alt="<%= author.username %>" class="author-avatar">
+                <% } else if (author.authType === 'github' && author.avatar) { %>
+                <img src="<%= author.avatar %>" alt="<%= author.username %>" class="author-avatar">
                 <% } else { %>
                 <div class="author-avatar avatar-placeholder"><%= author.username %></div>
                 <% } %>

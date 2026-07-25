@@ -33,6 +33,8 @@
                         <% } %>
                     <% } else if (AuthType === 'rotur') { %>
                     <img src="https://avatars.rotur.dev/<%= User.username %>" alt="<%= User.username %>" class="nav-avatar">
+                    <% } else if (AuthType === 'github' && User.avatar) { %>
+                    <img src="<%= User.avatar %>" alt="<%= User.username %>" class="nav-avatar">
                     <% } %>
                     <span class="nav-username"><%= h.formatUsername(User.username, AuthType) %></span>
                     <i data-lucide="chevron-down" class="dropdown-icon"></i>
