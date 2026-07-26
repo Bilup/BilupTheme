@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const helpers = require('./helpers');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const THEMES_DIR = path.join(DATA_DIR, 'themes');
@@ -147,11 +148,14 @@ function listThemes(sortBy = 'newest') {
   const index = loadThemeIndex();
   let themes = Object.values(index.themes || {});
 
-  // Enrich with likes/dislikes/downloads
+  // Enrich with ratings, downloads, and color preview data
   themes = themes.map(t => {
     const ratings = getRatings(t.uuid);
     const downloads = getDownloadCount(t.uuid);
-    return { ...t, likes: ratings.likes, dislikes: ratings.dislikes, downloads };
+    // Load full theme file to extract color/gradient preview
+    const themeResult = loadThemeFile(t.uuid);
+    const preview = themeResult.ok ? helpers.extractThemePreview(themeResult.data) : { colors: null, accent: null };
+    return { ...t, colors: preview.colors, accent: preview.accent, likes: ratings.likes, dislikes: ratings.dislikes, downloads };
   });
 
   if (sortBy === 'likes') {
@@ -179,8 +183,11 @@ function getUserThemes(username, authType) {
       if (themeResult.ok) {
         const ratings = getRatings(uuid);
         const downloads = getDownloadCount(uuid);
+        const preview = helpers.extractThemePreview(themeResult.data);
         themes.push({
           ...themeResult.data,
+          colors: preview.colors,
+          accent: preview.accent,
           likes: ratings.likes,
           dislikes: ratings.dislikes,
           downloads

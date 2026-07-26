@@ -15,7 +15,8 @@ function baseData(req) {
     AuthType: req.authType || null,
     IsAdmin: req.isAdmin || false,
     Mods: mods,
-    ActivePage: ''
+    ActivePage: '',
+    SiteOrigin: req.protocol + '://' + req.get('host')
   };
 }
 
@@ -213,7 +214,8 @@ router.get('/likes', authModule.requireAuthPage, (req, res) => {
       const themeResult = storage.loadThemeFile(t.uuid);
       if (themeResult.ok) {
         const downloads = storage.getDownloadCount(t.uuid);
-        likedThemes.push({ ...themeResult.data, likes: ratings.likes, dislikes: ratings.dislikes, downloads });
+        const preview = helpers.extractThemePreview(themeResult.data);
+        likedThemes.push({ ...themeResult.data, colors: preview.colors, accent: preview.accent, likes: ratings.likes, dislikes: ratings.dislikes, downloads });
       }
     }
   }

@@ -13,7 +13,7 @@ const mods = require(path.join(ROOT, 'mods.json')).mods;
 // ──────────── Dev Server ────────────
 function startServer() {
   const app = express();
-  const PORT = process.env.PORT || 5609;
+  const PORT = process.env.PORT || 19876;
 
   storage.ensureDirectories();
 
@@ -24,6 +24,15 @@ function startServer() {
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
   app.use('/static', express.static(path.join(ROOT, 'public')));
+  
+  // Serve lucide.js locally from node_modules to avoid CDN tracking prevention
+  const lucidePath = path.join(ROOT, 'node_modules', 'lucide', 'dist', 'umd', 'lucide.min.js');
+  if (fs.existsSync(lucidePath)) {
+    app.get('/static/js/lucide.js', (req, res) => {
+      res.sendFile(lucidePath);
+    });
+  }
+  
   app.use(authMiddleware);
 
   app.use((req, res, next) => {
@@ -89,7 +98,8 @@ function baseLocals() {
     Authenticated: false,
     User: null, UserId: null, AuthType: null, IsAdmin: false,
     ActivePage: '',
-    Mods: mods
+    Mods: mods,
+    SiteOrigin: process.env.SITE_ORIGIN || 'http://localhost:19876'
   };
 }
 
@@ -145,6 +155,15 @@ async function buildPages() {
     }
   }
 
+  // Copy lucide UMD from node_modules to avoid CDN tracking prevention issues
+  const lucideSource = path.join(ROOT, 'node_modules', 'lucide', 'dist', 'umd', 'lucide.min.js');
+  const lucideDest = path.join(OUTPUT_DIR, 'static', 'js', 'lucide.js');
+  if (fs.existsSync(lucideSource)) {
+    ensureDir(path.dirname(lucideDest));
+    fs.copyFileSync(lucideSource, lucideDest);
+    console.log('  🖋️  Copied lucide.js to static/js/');
+  }
+
   // Fix absolute /static/ paths in CSS (fonts, images) to be relative to css/ dir
   function fixCSSFile(cssPath) {
     if (!fs.existsSync(cssPath)) return;
@@ -171,7 +190,8 @@ async function buildPages() {
     const p = prefix ? prefix + '/' : '';
     return html
       .replace(/href="\/static\//g, `href="${p}static/`)
-      .replace(/src="\/static\//g, `src="${p}static/`);
+      .replace(/src="\/static\//g, `src="${p}static/`)
+      .replace(/src="https:\/\/unpkg\.com\/lucide@[^"]+\/dist\/umd\/lucide\.js"/g, `src="${p}static/js/lucide.js"`);
   }
 
   // Fix font paths in copied CSS
