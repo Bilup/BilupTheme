@@ -148,14 +148,15 @@ function listThemes(sortBy = 'newest') {
   const index = loadThemeIndex();
   let themes = Object.values(index.themes || {});
 
-  // Enrich with ratings, downloads, and color preview data
+  // Enrich with ratings, downloads, color preview data, and description
   themes = themes.map(t => {
     const ratings = getRatings(t.uuid);
     const downloads = getDownloadCount(t.uuid);
-    // Load full theme file to extract color/gradient preview
+    // Load full theme file to extract color/gradient preview and description
     const themeResult = loadThemeFile(t.uuid);
-    const colors = themeResult.ok ? helpers.extractThemePreview(themeResult.data) : null;
-    return { ...t, colors, likes: ratings.likes, dislikes: ratings.dislikes, downloads };
+    const preview = themeResult.ok ? helpers.extractThemePreview(themeResult.data) : { colors: null, accent: null };
+    const description = themeResult.ok ? themeResult.data.description : '';
+    return { ...t, description, colors: preview.colors, accent: preview.accent, likes: ratings.likes, dislikes: ratings.dislikes, downloads };
   });
 
   if (sortBy === 'likes') {
@@ -183,10 +184,11 @@ function getUserThemes(username, authType) {
       if (themeResult.ok) {
         const ratings = getRatings(uuid);
         const downloads = getDownloadCount(uuid);
-        const colors = helpers.extractThemePreview(themeResult.data);
+        const preview = helpers.extractThemePreview(themeResult.data);
         themes.push({
           ...themeResult.data,
-          colors,
+          colors: preview.colors,
+          accent: preview.accent,
           likes: ratings.likes,
           dislikes: ratings.dislikes,
           downloads

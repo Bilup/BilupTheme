@@ -196,7 +196,9 @@
             }
             if (colorsArray.length >= 2) {
                 const sortedColors = [...colorsArray].sort((a, b) => (a.position || 0) - (b.position || 0));
-                banner.style.background = `linear-gradient(135deg, ${sortedColors[0].color}, ${sortedColors[sortedColors.length - 1].color})`;
+                const colorStops = sortedColors.map(c => c.color);
+                const direction = colors.gradientDirection || 135;
+                banner.style.background = `linear-gradient(${direction}deg, ${colorStops.join(', ')})`;
             }
         } catch (e) { console.debug('Failed to parse color data:', e); }
     });

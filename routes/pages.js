@@ -92,7 +92,8 @@ router.get('/theme', (req, res) => {
   }
 
   // Extract preview colors
-  const themeColorsObj = helpers.extractThemePreview(theme);
+  const themePreview = helpers.extractThemePreview(theme);
+  const themeColorsObj = themePreview.colors || themePreview.accent;
 
   const data = {
     ...baseData(req),
@@ -218,8 +219,8 @@ router.get('/likes', authModule.requireAuthPage, (req, res) => {
       const themeResult = storage.loadThemeFile(t.uuid);
       if (themeResult.ok) {
         const downloads = storage.getDownloadCount(t.uuid);
-        const colors = helpers.extractThemePreview(themeResult.data);
-        likedThemes.push({ ...themeResult.data, colors, likes: ratings.likes, dislikes: ratings.dislikes, downloads });
+        const preview = helpers.extractThemePreview(themeResult.data);
+        likedThemes.push({ ...themeResult.data, colors: preview.colors, accent: preview.accent, likes: ratings.likes, dislikes: ratings.dislikes, downloads });
       }
     }
   }

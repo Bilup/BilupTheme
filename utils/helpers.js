@@ -48,13 +48,25 @@ function buildGradientFromColors(colors) {
   return `background: linear-gradient(${direction}deg, ${gradientColors.join(', ')});`;
 }
 
-// Extracts colors from a theme entry object.
-// The stored entry has: { uuid, name, theme: { name, colors: { gradient: [...] }, ... } }
 function extractThemePreview(theme) {
-  if (!theme) return null;
-  if (theme.theme && theme.theme.colors) return theme.theme.colors;
-  if (theme.colors) return theme.colors;
-  return null;
+  if (!theme) return { colors: null, accent: null };
+
+  if (theme.colors) return { colors: theme.colors, accent: null };
+  if (theme.accent) return { colors: null, accent: theme.accent };
+
+  if (theme.theme) {
+    if (theme.theme.colors) return { colors: theme.theme.colors, accent: null };
+    if (theme.theme.accent) return { colors: null, accent: theme.theme.accent };
+
+    const nested = theme.theme.themes;
+    if (Array.isArray(nested) && nested.length > 0) {
+      const first = nested[0];
+      if (first && first.colors) return { colors: first.colors, accent: null };
+      if (first && first.accent) return { colors: null, accent: first.accent };
+    }
+  }
+
+  return { colors: null, accent: null };
 }
 
 function formatUsername(username, authType) {
