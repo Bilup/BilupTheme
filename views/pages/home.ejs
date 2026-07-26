@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= Lang %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +15,7 @@
         .hero .cta-container { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
         .hero .btn { padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600; }
         .features-section { max-width: 1200px; margin: 4rem auto; padding: 0 2rem; text-align: center; }
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-top: 3rem; }
         .feature-card { background: var(--card-bg); border-radius: 16px; padding: 2rem; transition: var(--transition); text-align: center; }
         .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
         .feature-icon { width: 56px; height: 56px; background: var(--primary-color); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
@@ -48,59 +48,36 @@
     <main>
         <section class="hero">
             <h1>BilupTheme</h1>
-            <p>The ultimate theme marketplace for your favorite mods. Create, share, and discover beautiful themes across multiple platforms.</p>
+            <p><%= t('about.description') %></p>
             <div class="cta-container">
                 <a href="/upload" class="btn primary">
                     <i data-lucide="palette"></i>
-                    Create Theme
+                    <%= t('upload.uploadBtn') %>
                 </a>
                 <a href="/themes" class="btn secondary">
                     <i data-lucide="search"></i>
-                    Browse Themes
+                    <%= t('footer.browseThemes') %>
                 </a>
-            </div>
-        </section>
-
-        <section class="features-section">
-            <h2 class="section-title">Why BilupTheme?</h2>
-            <p class="section-subtitle">Everything you need to customize your experience</p>
-
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon"><i data-lucide="layers"></i></div>
-                    <h3>Cross-Platform Support</h3>
-                    <p>Upload themes once and use them across all your mods. Seamlessly apply and share your custom themes.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i data-lucide="lock"></i></div>
-                    <h3>Secure Auth</h3>
-                    <p>Sign in with Scratch or Rotur for secure authentication. Your themes are protected and your identity is verified.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i data-lucide="heart"></i></div>
-                    <h3>Community Driven</h3>
-                    <p>Like and download themes from the community. Discover trending themes and see what's popular with built-in rating system.</p>
-                </div>
             </div>
         </section>
 
         <section class="auth-cta">
-            <h2>Start Creating Today</h2>
+            <h2><%= t('home.use') %></h2>
             <div class="auth-buttons">
                 <% if (Authenticated) { %>
                     <a href="/upload" class="auth-btn rotur">
                         <i data-lucide="upload"></i>
-                        Upload Your Theme
+                        <%= t('upload.uploadBtn') %>
                     </a>
                 <% } else { %>
                     <a href="/auth" class="auth-btn rotur">
                         <i data-lucide="user"></i>
-                        Sign In to Get Started
+                        <%= t('nav.login') %>
                     </a>
                 <% } %>
                 <a href="/themes" class="auth-btn scratch" style="background: var(--card-bg); color: var(--text-color);">
                     <i data-lucide="search"></i>
-                    Browse All Themes
+                    <%= t('footer.browseThemes') %>
                 </a>
             </div>
         </section>

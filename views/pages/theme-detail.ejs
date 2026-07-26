@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= Lang %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,7 +40,7 @@
                                 <% } %>
                                 <span class="created-at">
                                     <i data-lucide="clock"></i>
-                                    <%= Theme.createdAt ? h.formatDate(Theme.createdAt) : (Theme.theme && Theme.theme.createdAt ? h.formatDate(Theme.theme.createdAt) : 'Unknown') %>
+                                    <%= Theme.createdAt ? h.formatDate(Theme.createdAt, Lang) : (Theme.theme && Theme.theme.createdAt ? h.formatDate(Theme.theme.createdAt, Lang) : 'Unknown') %>
                                 </span>
                             </div>
                         </div>
@@ -50,20 +50,20 @@
                             <div class="export-dropdown">
                                 <button class="btn secondary export-dropdown-toggle" id="export-dropdown-btn">
                                     <i data-lucide="download"></i>
-                                    Export
+                                    <%= t('themeDetail.export') %>
                                     <i data-lucide="chevron-down"></i>
                                 </button>
                                 <div class="export-dropdown-menu" id="export-dropdown-menu">
                                     <% Object.keys(Mods).forEach(function(id) { var m = Mods[id]; %>
                                     <button class="export-option" data-platform="<%= id %>" data-theme-uuid="<%= ThemeUUID %>">
                                         <img src="<%= m.icon %>" alt="<%= m.name %>" class="mod-icon-small">
-                                        <span>Export for <%= m.name %></span>
+                                        <span><%= t('themeDetail.exportFor') %> <%= m.name %></span>
                                     </button>
                                     <% }); %>
                                 </div>
                             </div>
                             <% } %>
-                            <button class="download-stat-btn" title="Downloads">
+                            <button class="download-stat-btn" title="<%= t('common.downloads') %>">
                                 <i data-lucide="download"></i>
                                 <span><%= h.formatNumber(Downloads) %></span>
                             </button>
@@ -72,20 +72,20 @@
                     
                     <div class="theme-rating-actions">
                         <% if (Authenticated) { %>
-                        <button class="rating-btn like <%= UserRating === 'like' ? 'active' : '' %>" data-rating="like" title="Like this theme">
+                        <button class="rating-btn like <%= UserRating === 'like' ? 'active' : '' %>" data-rating="like" title="<%= t('themeDetail.like') %>">
                             <i data-lucide="thumbs-up"></i>
                             <span><%= h.formatNumber(Ratings.likes) %></span>
                         </button>
-                        <button class="rating-btn dislike <%= UserRating === 'dislike' ? 'active' : '' %>" data-rating="dislike" title="Dislike this theme">
+                        <button class="rating-btn dislike <%= UserRating === 'dislike' ? 'active' : '' %>" data-rating="dislike" title="<%= t('themeDetail.dislike') %>">
                             <i data-lucide="thumbs-down"></i>
                             <span><%= h.formatNumber(Ratings.dislikes) %></span>
                         </button>
                         <% } else { %>
-                        <button class="rating-btn like disabled" data-rating="like" title="Log in to like themes" disabled>
+                        <button class="rating-btn like disabled" data-rating="like" title="<%= t('themeDetail.logInToLike') %>" disabled>
                             <i data-lucide="thumbs-up"></i>
                             <span><%= h.formatNumber(Ratings.likes) %></span>
                         </button>
-                        <button class="rating-btn dislike disabled" data-rating="dislike" title="Log in to dislike themes" disabled>
+                        <button class="rating-btn dislike disabled" data-rating="dislike" title="<%= t('themeDetail.logInToDislike') %>" disabled>
                             <i data-lucide="thumbs-down"></i>
                             <span><%= h.formatNumber(Ratings.dislikes) %></span>
                         </button>
@@ -93,29 +93,29 @@
                     </div>
                     
                     <div class="theme-description">
-                        <h2>Description</h2>
-                        <p><%= (Theme.description || (Theme.theme && Theme.theme.description)) ? (Theme.description || Theme.theme.description) : 'No description provided.' %></p>
+                        <h2><%= t('themeDetail.description') %></h2>
+                        <p><%= (Theme.description || (Theme.theme && Theme.theme.description)) ? (Theme.description || Theme.theme.description) : t('themeDetail.noDescription') %></p>
                     </div>
                     
                     <% if (Theme.theme && Theme.theme.wallpaper && Theme.theme.wallpaper.url) { %>
                     <div class="theme-wallpaper">
-                        <h2>Wallpaper</h2>
+                        <h2><%= t('themeDetail.wallpaper') %></h2>
                         <div class="wallpaper-preview">
-                            <img src="<%= Theme.theme.wallpaper.url %>" alt="Wallpaper" loading="lazy">
+                            <img src="<%= Theme.theme.wallpaper.url %>" alt="<%= t('themeDetail.wallpaper') %>" loading="lazy">
                         </div>
                         <div class="wallpaper-info">
                             <% if (Theme.theme.wallpaper.opacity) { %>
-                            <span>Opacity: <%= Theme.theme.wallpaper.opacity %></span>
+                            <span><%= t('themeDetail.opacity') %>: <%= Theme.theme.wallpaper.opacity %></span>
                             <% } %>
                             <% if (Theme.theme.wallpaper.darkness) { %>
-                            <span>Darkness: <%= Theme.theme.wallpaper.darkness %></span>
+                            <span><%= t('themeDetail.darkness') %>: <%= Theme.theme.wallpaper.darkness %></span>
                             <% } %>
                         </div>
                     </div>
                     <% } else if (Theme.theme && Theme.theme.wallpaper) { %>
                     <div class="theme-wallpaper">
-                        <h2>Wallpaper</h2>
-                        <p>Wallpaper configured but no URL specified</p>
+                        <h2><%= t('themeDetail.wallpaper') %></h2>
+                        <p><%= t('themeDetail.wallpaperNoUrl') %></p>
                     </div>
                     <% } %>
                 </div>
@@ -138,17 +138,17 @@
                         <% } %>
                     </div>
                     <h3 class="author-name"><%= h.formatUsername(AuthorUser.username, AuthorAuthType) %></h3>
-                    <a href="/profile?userId=<%= Theme.author %>&authType=<%= AuthorAuthType %>" class="view-profile-link">View Profile</a>
+                    <a href="/profile?userId=<%= Theme.author %>&authType=<%= AuthorAuthType %>" class="view-profile-link"><%= t('profile.viewProfile') %></a>
                     
                     <div class="author-stats">
                         <div class="stat-item">
                             <div class="stat-value"><%= AuthorThemeCount %></div>
-                            <div class="stat-label">Themes</div>
+                            <div class="stat-label"><%= t('profile.themes') %></div>
                         </div>
                         <% if (AuthorJoinDate) { %>
                         <div class="stat-item">
                             <div class="stat-value"><i data-lucide="calendar"></i></div>
-                            <div class="stat-label">Joined <%= AuthorJoinDate %></div>
+                            <div class="stat-label"> <%= AuthorJoinDate %> <%= t('profile.joined') %></div>
                         </div>
                         <% } %>
                     </div>
@@ -160,11 +160,11 @@
                     <div class="theme-actions vertical">
                         <button id="edit-theme-btn" class="btn secondary" data-uuid="<%= ThemeUUID %>" data-name="<%= Theme.name %>" data-description="<%= Theme.description %>">
                             <i data-lucide="edit"></i>
-                            Edit
+                            <%= t('common.edit') %>
                         </button>
                         <button id="delete-btn" class="btn danger" data-uuid="<%= ThemeUUID %>">
                             <i data-lucide="trash-2"></i>
-                            Delete
+                            <%= t('common.delete') %>
                         </button>
                     </div>
                 </div>

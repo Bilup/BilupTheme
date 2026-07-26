@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= Lang %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,12 +13,12 @@
         <div class="auth-card">
             <div class="auth-header">
                 <i data-lucide="palette" class="auth-logo"></i>
-                <h1>Welcome to BilupTheme</h1>
-                <p>Sign in with Rotur to upload, report, and manage themes</p>
+                <h1><%= t('auth.welcome') %></h1>
+                <p><%= t('auth.subtitle') %></p>
             </div>
             
             <div class="auth-providers">
-                <div class="auth-providers-header"><p>Login with</p></div>
+                <div class="auth-providers-header"><p><%= t('auth.loginWith') %></p></div>
                 <div class="auth-options">
 
                     <a id="rotur-btn" href="https://rotur.dev/auth?return_to=<%= SiteOrigin %>/auth" class="auth-btn rotur">
@@ -34,7 +34,7 @@
             </div>
             
             <div class="auth-footer">
-                <a href="https://rotur.dev" target="_blank" class="auth-footer-link">Learn about Rotur</a>
+                <a href="https://rotur.dev" target="_blank" class="auth-footer-link"><%= t('auth.learnAboutRotur') %></a>
             </div>
         </div>
     </main>

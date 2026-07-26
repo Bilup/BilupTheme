@@ -109,7 +109,7 @@ router.get('/theme', (req, res) => {
     AuthorUser: authorUser,
     AuthorAuthType: authorAuthType,
     AuthorThemeCount: authorThemeCount,
-    AuthorJoinDate: authorUser ? helpers.formatDate(authorUser.createdAt) : null,
+    AuthorJoinDate: authorUser ? helpers.formatDate(authorUser.createdAt, res.locals.Lang) : null,
     ThemeColorsObj: themeColorsObj
   };
   res.render('pages/theme-detail', data);

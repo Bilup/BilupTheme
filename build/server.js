@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const helpers = require('../utils/helpers');
 const storage = require('../utils/storage');
 const { authMiddleware } = require('../middleware/auth');
+const i18n = require('../utils/i18n');
 
 const ROOT = path.join(__dirname, '..');
 const mods = require(path.join(ROOT, 'mods.json')).mods;
@@ -34,6 +35,14 @@ function startServer() {
   }
   
   app.use(authMiddleware);
+
+  app.use((req, res, next) => {
+    const lang = i18n.detectLanguage(req);
+    res.cookie('lang', lang, { maxAge: 30 * 24 * 60 * 60 * 1000 });
+    res.locals.Lang = lang;
+    res.locals.t = (key) => i18n.t(lang, key);
+    next();
+  });
 
   app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
@@ -78,7 +87,8 @@ const OUTPUT_DIR = path.join(ROOT, 'build-pages');
 const VIEWS_DIR = path.join(ROOT, 'views');
 const PUBLIC_DIR = path.join(ROOT, 'public');
 
-function baseLocals() {
+function baseLocals(lang) {
+  const t = (key) => i18n.t(lang, key);
   return {
     h: helpers,
     mods,
@@ -97,26 +107,28 @@ function baseLocals() {
     User: null, UserId: null, AuthType: null, IsAdmin: false,
     ActivePage: '',
     Mods: mods,
-    SiteOrigin: process.env.SITE_ORIGIN || 'http://localhost:19876'
+    SiteOrigin: process.env.SITE_ORIGIN || 'http://localhost:19876',
+    Lang: lang,
+    t: t
   };
 }
 
-function pageData(overrides) {
-  return { ...baseLocals(), ...overrides };
+function pageData(lang, overrides) {
+  return { ...baseLocals(lang), ...overrides };
 }
 
-const pages = [
-  { template: 'pages/home',          output: 'index.html',               data: pageData({ ActivePage: 'home' }) },
-  { template: 'pages/index',         output: 'themes/index.html',        data: pageData({ ActivePage: 'themes', Themes: [], SortBy: 'newest', PlatformFilter: '', Users: {} }) },
-  { template: 'pages/about',         output: 'about/index.html',         data: pageData({ ActivePage: 'about' }) },
-  { template: 'pages/auth',          output: 'auth/index.html',          data: pageData({ ActivePage: 'auth' }) },
-  { template: 'pages/upload',        output: 'upload/index.html',        data: pageData({ ActivePage: 'upload' }) },
-  { template: 'pages/upload-success', output: 'upload-success/index.html', data: pageData({ ActivePage: 'upload', ThemeCount: 1 }) },
-  { template: 'pages/settings',      output: 'settings/index.html',      data: pageData({ ActivePage: 'settings' }) },
-  { template: 'pages/my-themes',     output: 'my-themes/index.html',     data: pageData({ ActivePage: 'my-themes', Themes: [], Users: {} }) },
-  { template: 'pages/likes',         output: 'likes/index.html',         data: pageData({ ActivePage: 'likes', Themes: [], Users: {} }) },
-  { template: 'pages/profile',       output: 'profile/index.html',       data: pageData({ ActivePage: 'profile', ProfileUser: { username: 'User', createdAt: new Date().toISOString() }, AuthType: 'rotur', Themes: [], IsOwnProfile: false }) },
-  { template: 'pages/404',           output: '404.html',                 data: pageData({ ActivePage: '' }) },
+const pageConfigs = [
+  { template: 'pages/home',          output: 'index.html',               baseData: { ActivePage: 'home' } },
+  { template: 'pages/index',         output: 'themes/index.html',        baseData: { ActivePage: 'themes', Themes: [], SortBy: 'newest', PlatformFilter: '', Users: {} } },
+  { template: 'pages/about',         output: 'about/index.html',         baseData: { ActivePage: 'about' } },
+  { template: 'pages/auth',          output: 'auth/index.html',          baseData: { ActivePage: 'auth' } },
+  { template: 'pages/upload',        output: 'upload/index.html',        baseData: { ActivePage: 'upload' } },
+  { template: 'pages/upload-success', output: 'upload-success/index.html', baseData: { ActivePage: 'upload', ThemeCount: 1 } },
+  { template: 'pages/settings',      output: 'settings/index.html',      baseData: { ActivePage: 'settings' } },
+  { template: 'pages/my-themes',     output: 'my-themes/index.html',     baseData: { ActivePage: 'my-themes', Themes: [], Users: {} } },
+  { template: 'pages/likes',         output: 'likes/index.html',         baseData: { ActivePage: 'likes', Themes: [], Users: {} } },
+  { template: 'pages/profile',       output: 'profile/index.html',       baseData: { ActivePage: 'profile', ProfileUser: { username: 'User', createdAt: new Date().toISOString() }, AuthType: 'rotur', Themes: [], IsOwnProfile: false } },
+  { template: 'pages/404',           output: '404.html',                 baseData: { ActivePage: '' } },
 ];
 
 function ensureDir(dir) {
@@ -195,23 +207,28 @@ async function buildPages() {
   // Fix font paths in copied CSS
   fixCSSFile(path.join(OUTPUT_DIR, 'static', 'css', 'styles.css'));
 
+  const languages = ['en', 'zh-CN'];
   let ok = 0, fail = 0;
-  for (const page of pages) {
-    const tpl = path.join(VIEWS_DIR, `${page.template}.ejs`);
-    const out = path.join(OUTPUT_DIR, page.output);
-    try {
-      ensureDir(path.dirname(out));
-      const prefix = staticPrefix(page.output);
-      const dataWithRoot = { ...page.data, StaticRoot: prefix };
-      let html = await ejs.renderFile(tpl, dataWithRoot, { views: [VIEWS_DIR] });
-      // Ensure no absolute /static/ paths remain (safe post-processing)
-      html = fixStaticPaths(html, prefix);
-      fs.writeFileSync(out, html, 'utf8');
-      console.log(`  ✅  /${page.output.replace(/\/index\.html$/, '').replace(/\.html$/, '')}`);
-      ok++;
-    } catch (err) {
-      console.error(`  ❌  ${page.template} — ${err.message}`);
-      fail++;
+  
+  for (const lang of languages) {
+    console.log(`\n🌐 Building ${lang} pages...`);
+    for (const page of pageConfigs) {
+      const tpl = path.join(VIEWS_DIR, `${page.template}.ejs`);
+      const langOutput = lang === 'en' ? page.output : `${lang}/${page.output}`;
+      const out = path.join(OUTPUT_DIR, langOutput);
+      try {
+        ensureDir(path.dirname(out));
+        const prefix = staticPrefix(langOutput);
+        const data = pageData(lang, { ...page.baseData, StaticRoot: prefix });
+        let html = await ejs.renderFile(tpl, data, { views: [VIEWS_DIR] });
+        html = fixStaticPaths(html, prefix);
+        fs.writeFileSync(out, html, 'utf8');
+        console.log(`  ✅  /${langOutput.replace(/\/index\.html$/, '').replace(/\.html$/, '')}`);
+        ok++;
+      } catch (err) {
+        console.error(`  ❌  ${lang}/${page.template} — ${err.message}`);
+        fail++;
+      }
     }
   }
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= Lang %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,14 +29,14 @@
             <div class="profile-info">
                 <h1 class="profile-name"><%= h.formatUsername(ProfileUser.username, AuthType) %></h1>
                 <p class="profile-meta">
-                    <span><i data-lucide="palette"></i> <%= Themes ? Themes.length : 0 %> theme(s)</span>
-                    <span><i data-lucide="calendar"></i> <%= h.formatDate(ProfileUser.createdAt) %></span>
+                    <span><i data-lucide="palette"></i> <%= Themes ? Themes.length : 0 %> <%= t('profile.themes') %></span>
+                    <span><i data-lucide="calendar"></i> <%= h.formatDate(ProfileUser.createdAt, Lang) %> <%= t('profile.joined') %></span>
                 </p>
             </div>
         </div>
 
         <div class="profile-themes">
-            <h2>Themes</h2>
+            <h2><%= t('profile.themes') %></h2>
             <% if (Themes && Themes.length > 0) { %>
                 <div class="themes-grid">
                     <% Themes.forEach(function(theme) { %>
@@ -44,9 +44,9 @@
                     <% }); %>
                 </div>
             <% } else if (IsOwnProfile) { %>
-                <%- include('../partials/empty-state', { icon: 'palette', message: "You haven't created any themes yet.", cta: true, ctaUrl: '/upload', ctaText: 'Create Your First Theme' }) %>
+                <%- include('../partials/empty-state', { icon: 'palette', message: t('myThemes.noThemes'), cta: true, ctaUrl: '/upload', ctaText: t('upload.uploadBtn') }) %>
             <% } else { %>
-                <%- include('../partials/empty-state', { icon: 'palette', message: "This user hasn't created any themes yet.", cta: false, ctaUrl: '', ctaText: '' }) %>
+                <%- include('../partials/empty-state', { icon: 'palette', message: t('myThemes.noThemes'), cta: false, ctaUrl: '', ctaText: '' }) %>
             <% } %>
         </div>
     </main>

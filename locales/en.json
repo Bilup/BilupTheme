@@ -1,0 +1,156 @@
+{
+  "nav": {
+    "home": "Home",
+    "themes": "Themes",
+    "myThemes": "My Themes",
+    "upload": "Upload",
+    "login": "Login",
+    "profile": "Profile",
+    "likedThemes": "Liked Themes",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "home": {
+    "use": "Start using BilupTheme"
+  },
+  "footer": {
+    "description": "Browse and share themes for Bilup",
+    "links": "Links",
+    "community": "Community",
+    "browseThemes": "Browse Themes",
+    "uploadTheme": "Upload Theme",
+    "serviceProvidedBy": "Service provided by"
+  },
+  "auth": {
+    "welcome": "Welcome to BilupTheme",
+    "subtitle": "Sign in with Rotur to upload, report, and manage themes",
+    "loginWith": "Login with",
+    "learnAboutRotur": "Learn about Rotur",
+    "loginFailed": "Login Failed",
+    "networkError": "Network Error",
+    "tryAgain": "Try Again",
+    "couldNotReachServer": "Could not reach the server."
+  },
+  "themes": {
+    "searchPlaceholder": "Search themes...",
+    "color": "Color",
+    "platform": "Platform",
+    "sortBy": "Sort by",
+    "newest": "Newest",
+    "mostLiked": "Most Liked",
+    "name": "Name",
+    "allColors": "All Colors",
+    "allPlatforms": "All Platforms",
+    "noThemes": "No themes found",
+    "clickToFilter": "click to filter",
+    "red": "Red",
+    "orange": "Orange",
+    "yellow": "Yellow",
+    "green": "Green",
+    "blue": "Blue",
+    "purple": "Purple",
+    "pink": "Pink"
+  },
+  "themeCard": {
+    "viewTheme": "View Theme",
+    "renameTheme": "Rename Theme",
+    "deleteTheme": "Delete Theme"
+  },
+  "themeDetail": {
+    "description": "Description",
+    "wallpaper": "Wallpaper",
+    "opacity": "Opacity",
+    "darkness": "Darkness",
+    "noDescription": "No description provided.",
+    "wallpaperNoUrl": "Wallpaper configured but no URL specified",
+    "download": "Download",
+    "export": "Export",
+    "exportFor": "Export for",
+    "like": "Like this theme",
+    "dislike": "Dislike this theme",
+    "logInToLike": "Log in to like themes",
+    "logInToDislike": "Log in to dislike themes"
+  },
+  "upload": {
+    "title": "Upload Theme",
+    "subtitle": "Upload your custom themes for Bilup",
+    "selectFile": "Select Theme File",
+    "dropFiles": "Drop files here or click to browse",
+    "themeName": "Theme Name",
+    "themeDescription": "Theme Description",
+    "platform": "Platform",
+    "uploadBtn": "Upload",
+    "uploading": "Uploading...",
+    "success": "Upload Successful!",
+    "successMessage": "Your theme(s) have been uploaded successfully.",
+    "viewTheme": "View Theme",
+    "uploadMore": "Upload More",
+    "supportedMods": "Supported Editor:",
+    "formatHint": "Supported format: .json (can contain multiple themes)"
+  },
+  "about": {
+    "title": "About BilupTheme",
+    "description": "BilupTheme is a community-driven platform for sharing and discovering themes for Bilup.",
+    "features": "Features",
+    "feature1": "Browse hundreds of community-created themes",
+    "feature2": "Upload and share your own creations",
+    "feature3": "Rate and favorite themes",
+    "feature4": "Export themes for different platforms",
+    "createdBy": "Created by Bilup",
+    "getInTouch": "Get in Touch",
+    "contactMessage": "Have questions or suggestions? Feel free to reach out!",
+    "github": "Contact on Github",
+    "qq": "Contact on QQ"
+  },
+  "settings": {
+    "title": "Settings",
+    "account": "Account",
+    "profile": "Profile",
+    "theme": "Theme",
+    "language": "Language",
+    "downloadTitle": "Download Your Themes",
+    "downloadDescription": "Download all your themes as a ZIP file. This will include all your uploaded themes and their configurations.",
+    "downloadBtn": "Download All Themes",
+    "dangerZone": "Danger Zone",
+    "dangerZoneDescription": "These actions are irreversible. Please be careful when performing these actions.",
+    "deleteAllData": "Delete All Themes & Data",
+    "confirmAction": "Confirm Action",
+    "confirmDeleteAll": "Are you sure you want to delete all your themes and user data? This action cannot be undone."
+  },
+  "profile": {
+    "viewProfile": "View Profile",
+    "themes": "Themes",
+    "joined": "Joined"
+  },
+  "likes": {
+    "title": "Liked Themes",
+    "noLikes": "You haven't liked any themes yet."
+  },
+  "myThemes": {
+    "title": "My Themes",
+    "noThemes": "You haven't uploaded any themes yet."
+  },
+  "404": {
+    "title": "Page Not Found",
+    "description": "The page you're looking for doesn't exist.",
+    "goHome": "Go Home"
+  },
+  "common": {
+    "likes": "Likes",
+    "downloads": "Downloads",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Are you sure you want to delete this theme?",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "apply": "Apply",
+    "close": "Close",
+    "error": "Error",
+    "success": "Success"
+  },
+  "language": {
+    "english": "English",
+    "chinese": "简体中文"
+  }
+}

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= Lang %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,25 +15,25 @@
         <section class="toolbar">
             <div class="search-bar">
                 <i data-lucide="search" class="search-icon"></i>
-                <input type="text" id="search-input" placeholder="Search themes..." />
+                <input type="text" id="search-input" placeholder="<%= t('themes.searchPlaceholder') %>" />
             </div>
             <div class="filter-controls">
-                <label for="color-select">Color</label>
+                <label for="color-select"><%= t('themes.color') %></label>
                 <select id="color-select">
-                    <option value="">All Colors</option>
-                    <option value="red">Red</option>
-                    <option value="orange">Orange</option>
-                    <option value="yellow">Yellow</option>
-                    <option value="green">Green</option>
-                    <option value="blue">Blue</option>
-                    <option value="purple">Purple</option>
-                    <option value="pink">Pink</option>
+                    <option value=""><%= t('themes.allColors') %></option>
+                    <option value="red"><%= t('themes.red') %></option>
+                    <option value="orange"><%= t('themes.orange') %></option>
+                    <option value="yellow"><%= t('themes.yellow') %></option>
+                    <option value="green"><%= t('themes.green') %></option>
+                    <option value="blue"><%= t('themes.blue') %></option>
+                    <option value="purple"><%= t('themes.purple') %></option>
+                    <option value="pink"><%= t('themes.pink') %></option>
                 </select>
             </div>
             <div class="filter-controls">
-                <label for="platform-select">Platform</label>
+                <label for="platform-select"><%= t('themes.platform') %></label>
                 <select id="platform-select">
-                    <option value="">All Platforms</option>
+                    <option value=""><%= t('themes.allPlatforms') %></option>
                     <% if (Mods) { %>
                     <% Object.keys(Mods).forEach(function(id) { var m = Mods[id]; %>
                     <option value="<%= id %>" <%= PlatformFilter === id ? 'selected' : '' %>><%= m.name %></option>
@@ -41,11 +41,11 @@
                 </select>
             </div>
             <div class="sort-controls">
-                <label for="sort-select">Sort by</label>
+                <label for="sort-select"><%= t('themes.sortBy') %></label>
                 <select id="sort-select">
-                    <option value="newest" <%= SortBy === 'newest' ? 'selected' : '' %>>Newest</option>
-                    <option value="likes" <%= SortBy === 'likes' ? 'selected' : '' %>>Most Liked</option>
-                    <option value="name" <%= SortBy === 'name' ? 'selected' : '' %>>Name</option>
+                    <option value="newest" <%= SortBy === 'newest' ? 'selected' : '' %>><%= t('themes.newest') %></option>
+                    <option value="likes" <%= SortBy === 'likes' ? 'selected' : '' %>><%= t('themes.mostLiked') %></option>
+                    <option value="name" <%= SortBy === 'name' ? 'selected' : '' %>><%= t('themes.name') %></option>
                 </select>
             </div>
         </section>
@@ -58,9 +58,9 @@
             <% } else { %>
             <div class="empty-state">
                 <i data-lucide="palette"></i>
-                <p>No themes yet. Be the first to create one!</p>
+                <p><%= t('themes.noThemes') %></p>
                 <% if (Authenticated) { %>
-                <a href="/upload" class="btn primary">Create Theme</a>
+                <a href="/upload" class="btn primary"><%= t('upload.uploadBtn') %></a>
                 <% } %>
             </div>
             <% } %>

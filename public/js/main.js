@@ -7,8 +7,10 @@ document.addEventListener('DOMContentLoaded', function() {
   const logoutBtn = document.getElementById('logout-btn');
   const userMenuBtn = document.getElementById('user-menu-btn');
   const dropdownMenu = document.getElementById('dropdown-menu');
+  const langToggleBtn = document.getElementById('lang-toggle-btn');
 
   setupDropdown();
+  setupLangToggle();
 
   sortThemes('newest');
 
@@ -236,5 +238,19 @@ function setupDropdown() {
         if (e.key === 'Escape') {
             dropdownMenu.style.display = 'none';
         }
+    });
+}
+
+function setupLangToggle() {
+    const btn = document.getElementById('lang-toggle-btn');
+    if (!btn) return;
+
+    btn.addEventListener('click', function() {
+        const currentLang = document.documentElement.lang;
+        const targetLang = currentLang === 'zh-CN' ? 'en' : 'zh-CN';
+
+        const url = new URL(window.location.href);
+        url.searchParams.set('lang', targetLang);
+        window.location.href = url.toString();
     });
 }

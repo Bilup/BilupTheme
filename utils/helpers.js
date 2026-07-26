@@ -6,7 +6,7 @@ function formatNumber(num) {
   return String(num);
 }
 
-function formatDate(dateStr) {
+function formatDate(dateStr, lang = 'en') {
   if (!dateStr) return 'Unknown';
   const date = new Date(dateStr);
   const now = new Date();
@@ -16,12 +16,30 @@ function formatDate(dateStr) {
   const diffHour = Math.floor(diffMin / 60);
   const diffDay = Math.floor(diffHour / 24);
 
-  if (diffSec < 60) return 'just now';
-  if (diffMin < 60) return `${diffMin}m ago`;
-  if (diffHour < 24) return `${diffHour}h ago`;
-  if (diffDay < 7) return `${diffDay}d ago`;
+  const i18n = {
+    'en': {
+      'just_now': 'just now',
+      'minutes_ago': '{n}m ago',
+      'hours_ago': '{n}h ago',
+      'days_ago': '{n}d ago'
+    },
+    'zh-CN': {
+      'just_now': '刚刚',
+      'minutes_ago': '{n}分钟前',
+      'hours_ago': '{n}小时前',
+      'days_ago': '{n}天前'
+    }
+  };
 
-  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  const locale = i18n[lang] || i18n.en;
+
+  if (diffSec < 60) return locale['just_now'];
+  if (diffMin < 60) return locale['minutes_ago'].replace('{n}', diffMin);
+  if (diffHour < 24) return locale['hours_ago'].replace('{n}', diffHour);
+  if (diffDay < 7) return locale['days_ago'].replace('{n}', diffDay);
+
+  const localeStr = lang === 'zh-CN' ? 'zh-CN' : 'en-US';
+  return date.toLocaleDateString(localeStr, { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
 function slugify(text) {

@@ -1,0 +1,156 @@
+{
+  "nav": {
+    "home": "首页",
+    "themes": "主题",
+    "myThemes": "我的主题",
+    "upload": "上传",
+    "login": "登录",
+    "profile": "个人资料",
+    "likedThemes": "收藏的主题",
+    "settings": "设置",
+    "logout": "退出登录"
+  },
+  "home": {
+    "use": "现在开始使用 BilupTheme"
+  },
+  "footer": {
+    "description": "浏览并分享您喜爱的 Bilup 主题",
+    "links": "链接",
+    "community": "社区",
+    "browseThemes": "浏览主题",
+    "uploadTheme": "上传主题",
+    "serviceProvidedBy": "服务提供"
+  },
+  "auth": {
+    "welcome": "欢迎来到 BilupTheme",
+    "subtitle": "使用 Rotur 登录以上传、报告和管理主题",
+    "loginWith": "使用",
+    "learnAboutRotur": "了解 Rotur",
+    "loginFailed": "登录失败",
+    "networkError": "网络错误",
+    "tryAgain": "重试",
+    "couldNotReachServer": "无法连接到服务器。"
+  },
+  "themes": {
+    "searchPlaceholder": "搜索主题...",
+    "color": "颜色",
+    "platform": "平台",
+    "sortBy": "排序方式",
+    "newest": "最新",
+    "mostLiked": "最多收藏",
+    "name": "名称",
+    "allColors": "所有颜色",
+    "allPlatforms": "所有平台",
+    "noThemes": "没有找到主题",
+    "clickToFilter": "点击筛选",
+    "red": "红色",
+    "orange": "橙色",
+    "yellow": "黄色",
+    "green": "绿色",
+    "blue": "蓝色",
+    "purple": "紫色",
+    "pink": "粉色"
+  },
+  "themeCard": {
+    "viewTheme": "查看主题",
+    "renameTheme": "重命名主题",
+    "deleteTheme": "删除主题"
+  },
+  "themeDetail": {
+    "description": "描述",
+    "wallpaper": "壁纸",
+    "opacity": "透明度",
+    "darkness": "暗度",
+    "noDescription": "没有提供描述。",
+    "wallpaperNoUrl": "已配置壁纸但未指定 URL",
+    "download": "下载",
+    "export": "导出",
+    "exportFor": "导出到",
+    "like": "喜欢此主题",
+    "dislike": "不喜欢此主题",
+    "logInToLike": "登录以收藏主题",
+    "logInToDislike": "登录以点踩主题"
+  },
+  "upload": {
+    "title": "上传主题",
+    "subtitle": "上传您为 Bilup 创建的自定义主题",
+    "selectFile": "选择主题文件",
+    "dropFiles": "拖放文件到这里或点击浏览",
+    "themeName": "主题名称",
+    "themeDescription": "主题描述",
+    "platform": "平台",
+    "uploadBtn": "上传",
+    "uploading": "上传中...",
+    "success": "上传成功！",
+    "successMessage": "您的主题已成功上传。",
+    "viewTheme": "查看主题",
+    "uploadMore": "继续上传",
+    "supportedMods": "支持的编辑器：",
+    "formatHint": "支持格式：.json（可包含多个主题）"
+  },
+  "about": {
+    "title": "关于 BilupTheme",
+    "description": "BilupTheme 是一个社区驱动的平台，用于分享和发现您喜爱的 Bilup 主题。",
+    "features": "功能",
+    "feature1": "浏览数百个社区创建的主题",
+    "feature2": "上传并分享您自己的创作",
+    "feature3": "评分和收藏主题",
+    "feature4": "为不同平台导出主题",
+    "createdBy": "创建者",
+    "getInTouch": "联系我们",
+    "contactMessage": "有问题或建议？欢迎联系我们！",
+    "github": "在 Github 上联系",
+    "qq": "在 QQ 上联系"
+  },
+  "settings": {
+    "title": "设置",
+    "account": "账户",
+    "profile": "资料",
+    "theme": "主题",
+    "language": "语言",
+    "downloadTitle": "下载您的主题",
+    "downloadDescription": "将您所有的主题下载为 ZIP 文件。这将包含您上传的所有主题及其配置。",
+    "downloadBtn": "下载所有主题",
+    "dangerZone": "危险区域",
+    "dangerZoneDescription": "这些操作不可撤销。执行这些操作时请务必小心。",
+    "deleteAllData": "删除所有主题和数据",
+    "confirmAction": "确认操作",
+    "confirmDeleteAll": "确定要删除所有主题和用户数据吗？此操作无法撤销。"
+  },
+  "profile": {
+    "viewProfile": "查看资料",
+    "themes": "主题",
+    "joined": "加入"
+  },
+  "likes": {
+    "title": "收藏的主题",
+    "noLikes": "您还没有收藏任何主题。"
+  },
+  "myThemes": {
+    "title": "我的主题",
+    "noThemes": "您还没有上传任何主题。"
+  },
+  "404": {
+    "title": "页面未找到",
+    "description": "您查找的页面不存在。",
+    "goHome": "返回首页"
+  },
+  "common": {
+    "likes": "收藏",
+    "downloads": "下载",
+    "edit": "编辑",
+    "delete": "删除",
+    "confirmDelete": "确定要删除这个主题吗？",
+    "cancel": "取消",
+    "confirm": "确定",
+    "save": "保存",
+    "apply": "应用",
+    "close": "关闭",
+    "error": "错误",
+    "success": "成功"
+  },
+  "language": {
+    "english": "English",
+    "chinese": "简体中文"
+  }
+}

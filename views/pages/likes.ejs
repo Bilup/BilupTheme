@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= Lang %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +18,7 @@
                 <%- include('../partials/theme-card', { Theme: theme, Mods: Mods, ShowAuthor: true, ShowActions: false, ShowDate: true, Users: Users }) %>
                 <% }); %>
             <% } else { %>
-                <%- include('../partials/empty-state', { icon: 'heart', message: "You haven't liked any themes yet.", cta: true, ctaUrl: '/themes', ctaText: 'Browse Themes' }) %>
+                <%- include('../partials/empty-state', { icon: 'heart', message: t('likes.noLikes'), cta: true, ctaUrl: '/themes', ctaText: t('footer.browseThemes') }) %>
             <% } %>
         </div>
     </main>

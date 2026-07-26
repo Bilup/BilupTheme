@@ -12,14 +12,14 @@ var users = Users;
         <div class="theme-card-header-left">
         </div>
         <div class="theme-card-actions">
-            <a href="/themes/<%= theme.author %>/<%= h.slugify(theme.name) %>" class="view-btn" title="View Theme">
+            <a href="/themes/<%= theme.author %>/<%= h.slugify(theme.name) %>" class="view-btn" title="<%= t('themeCard.viewTheme') %>">
                 <i data-lucide="eye"></i>
             </a>
             <% if (showActions) { %>
-            <button class="rename-btn action-btn" title="Rename Theme" data-uuid="<%= theme.uuid %>" data-name="<%= theme.name %>" data-description="<%= theme.description %>">
+            <button class="rename-btn action-btn" title="<%= t('themeCard.renameTheme') %>" data-uuid="<%= theme.uuid %>" data-name="<%= theme.name %>" data-description="<%= theme.description %>">
                 <i data-lucide="edit"></i>
             </button>
-            <button class="delete-btn action-btn" title="Delete Theme" data-uuid="<%= theme.uuid %>">
+            <button class="delete-btn action-btn" title="<%= t('themeCard.deleteTheme') %>" data-uuid="<%= theme.uuid %>">
                 <i data-lucide="trash-2"></i>
             </button>
             <% } %>
@@ -56,24 +56,24 @@ var users = Users;
         <% } %>
         <% } %>
         <div class="theme-stats">
-            <div class="stat">
+            <div class="stat" title="<%= t('common.likes') %>">
                 <i data-lucide="heart"></i>
                 <span><%= (theme.likes || 0) - (theme.dislikes || 0) %></span>
             </div>
-            <div class="stat">
+            <div class="stat" title="<%= t('common.downloads') %>">
                 <i data-lucide="download"></i>
                 <span><%= theme.downloads || 0 %></span>
             </div>
             <% if (mods && theme.platform) { %>
             <% var mod = mods[theme.platform.toLowerCase()]; %>
             <% if (mod) { %>
-            <a href="/themes?platform=<%= theme.platform.toLowerCase() %>" class="mod-icon-link" title="<%= mod.name %> (click to filter)">
+            <a href="/themes?platform=<%= theme.platform.toLowerCase() %>" class="mod-icon-link" title="<%= mod.name %> (<%= t('themes.clickToFilter') %>)">
                 <img src="<%= mod.icon %>" alt="<%= mod.name %>" class="mod-icon">
             </a>
             <% } %>
             <% } %>
             <% if (showDate) { %>
-            <span class="created-at"><%= h.formatDate(theme.createdAt) %></span>
+            <span class="created-at"><%= h.formatDate(theme.createdAt, Lang) %></span>
             <% } %>
         </div>
     </div>

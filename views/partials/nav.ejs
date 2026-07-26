@@ -5,21 +5,21 @@
         <div class="nav-links">
             <a href="/" class="nav-link <%= ActivePage === 'home' ? 'active' : '' %>">
                 <i data-lucide="home"></i>
-                <span>Home</span>
+                <span><%= t('nav.home') %></span>
             </a>
             <a href="/themes" class="nav-link <%= ActivePage === 'themes' ? 'active' : '' %>">
                 <i data-lucide="layout-grid"></i>
-                <span>Themes</span>
+                <span><%= t('nav.themes') %></span>
             </a>
             
             <% if (Authenticated) { %>
             <a href="/my-themes" class="nav-link <%= ActivePage === 'my-themes' ? 'active' : '' %>">
                 <i data-lucide="folder-open"></i>
-                <span>My Themes</span>
+                <span><%= t('nav.myThemes') %></span>
             </a>
             <a href="/upload" class="nav-link <%= ActivePage === 'upload' ? 'active' : '' %>">
                 <i data-lucide="upload"></i>
-                <span>Upload</span>
+                <span><%= t('nav.upload') %></span>
             </a>
             
             <% if (User) { %>
@@ -42,19 +42,19 @@
                 <div class="dropdown-menu" id="dropdown-menu" style="display: none;">
                     <a href="/profile?userId=<%= UserId %>&authType=<%= AuthType %>" class="dropdown-item <%= ActivePage === 'profile' ? 'active' : '' %>">
                         <i data-lucide="user"></i>
-                        <span>Profile</span>
+                        <span><%= t('nav.profile') %></span>
                     </a>
                     <a href="/likes" class="dropdown-item <%= ActivePage === 'likes' ? 'active' : '' %>">
                         <i data-lucide="heart"></i>
-                        <span>Liked Themes</span>
+                        <span><%= t('nav.likedThemes') %></span>
                     </a>
                     <a href="/settings" class="dropdown-item <%= ActivePage === 'settings' ? 'active' : '' %>">
                         <i data-lucide="settings"></i>
-                        <span>Settings</span>
+                        <span><%= t('nav.settings') %></span>
                     </a>
                     <a href="/logout" class="dropdown-item dropdown-logout">
                         <i data-lucide="log-out"></i>
-                        <span>Logout</span>
+                        <span><%= t('nav.logout') %></span>
                     </a>
                 </div>
             </div>
@@ -62,9 +62,14 @@
             <% } else { %>
             <a href="/auth" class="nav-link nav-login <%= ActivePage === 'auth' ? 'active' : '' %>">
                 <i data-lucide="log-in"></i>
-                <span>Login</span>
+                <span><%= t('nav.login') %></span>
             </a>
             <% } %>
+            
+            <button id="lang-toggle-btn" class="nav-link" style="background: none; border: none; cursor: pointer; font-family: inherit;">
+                <i data-lucide="globe"></i>
+                <span><%= Lang === 'zh-CN' ? 'English' : '中文' %></span>
+            </button>
         </div>
     </div>
 </nav>

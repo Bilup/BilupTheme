@@ -118,9 +118,12 @@ function downloadThemesAsZip(themes, username) {
 
 function setupDeleteAllData() {
     const deleteBtn = document.getElementById('delete-data-btn')
+    const i18nSettings = document.getElementById('i18n-settings')
+    const confirmDeleteAllMsg = i18nSettings?.dataset.confirmDeleteAll || 'Are you sure you want to delete all your themes and user data? This action cannot be undone.'
+    
     deleteBtn.addEventListener('click', () => {
         openConfirmModal(
-            'Are you sure you want to delete all your themes and user data? This action cannot be undone.',
+            confirmDeleteAllMsg,
             async () => {
                 try {
                     deleteBtn.disabled = true

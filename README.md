@@ -7,7 +7,6 @@ A theme marketplace for Bilup mods — browse, share, and download custom themes
 
 - **Browse & Search** — Discover themes by name, color, or platform
 - **Upload & Share** — Upload JSON theme files; supports batch upload with auto-detection
-- **Cross-Platform Export** — Convert themes between Bilup, MistWarp, and NitroBolt formats
 - **Rate & Review** — Like/dislike themes and track popularity
 - **User Profiles** — Sign in with **Rotur** OAuth; manage your themes and likes
 - **Self-Hosted Fonts** — Poppins fonts bundled locally (no external CDN dependency)
@@ -20,13 +19,13 @@ npm install
 npm start
 ```
 
-Open [http://localhost:5609](http://localhost:5609)
+Open [http://localhost:19876](http://localhost:19876)
 
 ## Scripts
 
 | Command | Description |
 |---------|-------------|
-| `npm start` | Start the dev server (port 5609) |
+| `npm start` | Start the dev server (port 19876) |
 | `npm run dev` | Same as `npm start` |
 | `npm run build` | Generate static pages into `build-pages/` |
 | `npm run fetch-fonts` | Re-download Poppins fonts from Google Fonts |
