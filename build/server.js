@@ -25,6 +25,7 @@ function startServer() {
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
   app.use('/static', express.static(path.join(ROOT, 'public')));
+  app.use('/favicon.ico', express.static(path.join(ROOT, 'favicon.ico')));
   
   // Serve lucide.js locally from node_modules to avoid CDN tracking prevention
   const lucidePath = path.join(ROOT, 'node_modules', 'lucide', 'dist', 'umd', 'lucide.min.js');
