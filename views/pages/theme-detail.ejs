@@ -14,16 +14,12 @@
     <main class="main-content">
         <div class="theme-detail-layout">
             <div class="theme-detail-main">
-                <div class="theme-detail-banner" id="theme-banner" style="<%= Theme.theme && Theme.theme.colors ? h.buildGradientFromColors(Theme.theme.colors) : (Theme.theme && Theme.theme.accent ? h.buildGradientFromAccent(Theme.theme.accent) : '') %>" <%- Theme.theme && Theme.theme.colors ? 'data-colors=\'' + h.toJson(Theme.theme.colors) + '\'' : (Theme.theme && Theme.theme.accent ? 'data-accent=\'' + h.toJson(Theme.theme.accent) + '\'' : '') %>></div>
+                <div class="theme-detail-banner" id="theme-banner" style="<%= ThemeColorsObj ? h.buildGradientFromColors(ThemeColorsObj) : '' %>" <%- ThemeColorsObj ? 'data-colors=\'' + h.toJson(ThemeColorsObj) + '\'' : '' %>></div>
                 
                 <div class="theme-detail-content">
                     <div class="theme-preview-colors" id="preview-colors">
-                        <% if (Theme.theme && Theme.theme.colors && Theme.theme.colors.gradient) { %>
-                            <% Theme.theme.colors.gradient.forEach(function(c) { %>
-                                <div class="preview-color-dot" style="background-color: <%= c.color %>"></div>
-                            <% }); %>
-                        <% } else if (Theme.theme && Theme.theme.accent && Theme.theme.accent.colors) { %>
-                            <% Theme.theme.accent.colors.forEach(function(c) { %>
+                        <% if (ThemeColorsObj && ThemeColorsObj.gradient) { %>
+                            <% ThemeColorsObj.gradient.forEach(function(c) { %>
                                 <div class="preview-color-dot" style="background-color: <%= c.color %>"></div>
                             <% }); %>
                         <% } else { %>
@@ -100,32 +96,6 @@
                         <h2>Description</h2>
                         <p><%= (Theme.description || (Theme.theme && Theme.theme.description)) ? (Theme.description || Theme.theme.description) : 'No description provided.' %></p>
                     </div>
-                    
-                    <% if (Theme.theme && Theme.theme.platformData && Theme.theme.platformData.mistwarp) { %>
-                    <div class="theme-specs">
-                        <h2>MistWarp Settings</h2>
-                        <div class="spec-grid">
-                            <% if (Theme.theme.platformData.mistwarp.gui) { %>
-                            <div class="spec-item">
-                                <div class="spec-label">GUI Mode</div>
-                                <div class="spec-value"><%= Theme.theme.platformData.mistwarp.gui %></div>
-                            </div>
-                            <% } %>
-                            <% if (Theme.theme.platformData.mistwarp.blocks) { %>
-                            <div class="spec-item">
-                                <div class="spec-label">Blocks Style</div>
-                                <div class="spec-value"><%= Theme.theme.platformData.mistwarp.blocks %></div>
-                            </div>
-                            <% } %>
-                            <% if (Theme.theme.platformData.mistwarp.menuBarAlign) { %>
-                            <div class="spec-item">
-                                <div class="spec-label">Menu Alignment</div>
-                                <div class="spec-value"><%= Theme.theme.platformData.mistwarp.menuBarAlign %></div>
-                            </div>
-                            <% } %>
-                        </div>
-                    </div>
-                    <% } %>
                     
                     <% if (Theme.theme && Theme.theme.wallpaper && Theme.theme.wallpaper.url) { %>
                     <div class="theme-wallpaper">
@@ -219,15 +189,10 @@
         if (!banner) return;
         let colorsArray = [];
         const colorsData = banner.dataset.colors;
-        const accentData = banner.dataset.accent;
         try {
-            let colors;
             if (colorsData) {
-                colors = JSON.parse(colorsData);
+                const colors = JSON.parse(colorsData);
                 if (colors.gradient && Array.isArray(colors.gradient)) colorsArray = colors.gradient;
-            } else if (accentData) {
-                colors = JSON.parse(accentData);
-                if (colors.colors && Array.isArray(colors.colors)) colorsArray = colors.colors;
             }
             if (colorsArray.length >= 2) {
                 const sortedColors = [...colorsArray].sort((a, b) => (a.position || 0) - (b.position || 0));

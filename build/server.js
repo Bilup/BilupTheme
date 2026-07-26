@@ -50,7 +50,6 @@ function startServer() {
     res.locals.formatDate = helpers.formatDate;
     res.locals.slugify = helpers.slugify;
     res.locals.buildGradientFromColors = helpers.buildGradientFromColors;
-    res.locals.buildGradientFromAccent = helpers.buildGradientFromAccent;
     res.locals.formatUsername = helpers.formatUsername;
     res.locals.getScratchUserAvatarURL = helpers.getScratchUserAvatarURL;
     res.locals.getModIconURL = helpers.getModIconURL;
@@ -87,7 +86,6 @@ function baseLocals() {
     formatDate: helpers.formatDate,
     slugify: helpers.slugify,
     buildGradientFromColors: helpers.buildGradientFromColors,
-    buildGradientFromAccent: helpers.buildGradientFromAccent,
     formatUsername: helpers.formatUsername,
     getScratchUserAvatarURL: helpers.getScratchUserAvatarURL,
     getModIconURL: helpers.getModIconURL,

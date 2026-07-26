@@ -78,27 +78,42 @@ document.addEventListener('DOMContentLoaded', function() {
     function parseAndPreviewThemes(themeJson, fileName) {
         parsedThemes = [];
         
-if (themeJson.themes && Array.isArray(themeJson.themes)) {
-    parsedThemes = themeJson.themes.map((t, index) => ({
-      id: index,
-      name: t.name || `Theme ${index + 1}`,
-      description: t.description || '',
-      platform: (themeJson.platform || '').toLowerCase(),
-      themeData: t,
-      rawJson: themeJson,
-      errors: []
-    }));
-  } else {
-    parsedThemes = [{
-      id: 0,
-      name: themeJson.name || 'Untitled Theme',
-      description: themeJson.description || '',
-      platform: (themeJson.platform || '').toLowerCase(),
-      themeData: themeJson,
-      rawJson: themeJson,
-      errors: []
-    }];
-  }
+        if (themeJson.themes && Array.isArray(themeJson.themes)) {
+            // Extract themes from MistWarp-style wrapper, convert to Bilup format
+            parsedThemes = themeJson.themes.map((t, index) => {
+                // Convert accent to colors.gradient if needed
+                let themeData = t;
+                if (t.accent && !t.colors) {
+                    themeData = Object.assign({}, t, {
+                        colors: {
+                            gradient: (t.accent.colors || []).map(function(c) {
+                                return { color: c.color, position: c.position };
+                            }),
+                            gradientDirection: parseInt(t.accent.direction) || 135
+                        }
+                    });
+                }
+                return {
+                    id: index,
+                    name: t.name || ('Theme ' + (index + 1)),
+                    description: t.description || '',
+                    platform: 'bilup',
+                    themeData: themeData,
+                    rawJson: themeData,
+                    errors: []
+                };
+            });
+        } else {
+            parsedThemes = [{
+                id: 0,
+                name: themeJson.name || 'Untitled Theme',
+                description: themeJson.description || '',
+                platform: 'bilup',
+                themeData: themeJson,
+                rawJson: themeJson,
+                errors: []
+            }];
+        }
 
         if (parsedThemes.length === 0) {
             alert('No themes found in file');
@@ -109,23 +124,10 @@ if (themeJson.themes && Array.isArray(themeJson.themes)) {
     }
 
     async function detectPlatformForThemes(themes, fileName) {
-        try {
-            const response = await fetch('/api/theme/detect-platform', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(themes[0].rawJson)
-            });
-
-            const result = await response.json();
-
-            if (result.ok && result.platform) {
-                themes.forEach(theme => {
-                    theme.platform = result.platform;
-                });
-            }
-        } catch (error) {
-            console.warn('Platform detection failed:', error);
-        }
+        // All themes are bilup format
+        themes.forEach(theme => {
+            theme.platform = 'bilup';
+        });
 
         fileNameDisplay.textContent = fileName;
         themesCountDisplay.textContent = ` • ${themes.length} theme${themes.length > 1 ? 's' : ''} found`;
@@ -213,12 +215,6 @@ if (themeJson.themes && Array.isArray(themeJson.themes)) {
         
         if (themeData.colors && themeData.colors.gradient && Array.isArray(themeData.colors.gradient)) {
             colors = themeData.colors.gradient.map(c => c.color);
-        } else if (themeData.colors && themeData.colors.primary && themeData.colors.secondary) {
-            colors = [themeData.colors.primary, themeData.colors.secondary];
-        }
-        
-        if (colors.length === 0 && themeData.accent && themeData.accent.colors && Array.isArray(themeData.accent.colors)) {
-            colors = themeData.accent.colors.map(c => c.color);
         }
         
         if (colors.length === 0) {
@@ -229,13 +225,7 @@ if (themeJson.themes && Array.isArray(themeJson.themes)) {
             return `background: linear-gradient(${direction}deg, ${colors[0]}, ${colors[0]});`;
         }
         
-        const sortedColors = [...colors].sort((a, b) => {
-            const posA = themeData.colors?.gradient?.find(c => c.color === a)?.position ?? 0;
-            const posB = themeData.colors?.gradient?.find(c => c.color === b)?.position ?? 100;
-            return posA - posB;
-        });
-        
-        return `background: linear-gradient(${direction}deg, ${sortedColors.join(', ')});`;
+        return `background: linear-gradient(${direction}deg, ${colors.join(', ')});`;
     }
 
     function removeTheme(index) {

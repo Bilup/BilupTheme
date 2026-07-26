@@ -41,8 +41,6 @@ function buildGradientFromColors(colors) {
     gradientColors = colors.gradient
       .sort((a, b) => (a.position || 0) - (b.position || 0))
       .map(c => c.color);
-  } else if (colors.primary && colors.secondary) {
-    gradientColors = [colors.primary, colors.secondary];
   }
 
   if (gradientColors.length === 0) return '';
@@ -50,37 +48,13 @@ function buildGradientFromColors(colors) {
   return `background: linear-gradient(${direction}deg, ${gradientColors.join(', ')});`;
 }
 
-function buildGradientFromAccent(accent) {
-  if (!accent || !accent.colors || !Array.isArray(accent.colors)) return '';
-  const gradientColors = accent.colors
-    .sort((a, b) => (a.position || 0) - (b.position || 0))
-    .map(c => c.color);
-  let direction = accent.direction || 135;
-  if (typeof direction === 'string') direction = parseFloat(direction) || 135;
-  if (gradientColors.length === 0) return '';
-  if (gradientColors.length === 1) gradientColors.push(gradientColors[0]);
-  return `background: linear-gradient(${direction}deg, ${gradientColors.join(', ')});`;
-}
-
-// Extracts { colors, accent } from a theme object, handling nested MistWarp format.
-// MistWarp themes store accent/colors at theme.theme.themes[0].accent,
-// while Bilup/NitroBolt store them at the top level.
+// Extracts colors from a theme entry object.
+// The stored entry has: { uuid, name, theme: { name, colors: { gradient: [...] }, ... } }
 function extractThemePreview(theme) {
-  if (!theme) return { colors: null, accent: null };
-
-  // Top-level (Bilup / NitroBolt format)
-  if (theme.colors) return { colors: theme.colors, accent: null };
-  if (theme.accent) return { colors: null, accent: theme.accent };
-
-  // Nested MistWarp format: theme.theme.themes[0]
-  const nested = theme.theme && theme.theme.themes;
-  if (Array.isArray(nested) && nested.length > 0) {
-    const first = nested[0];
-    if (first && first.colors) return { colors: first.colors, accent: null };
-    if (first && first.accent) return { colors: null, accent: first.accent };
-  }
-
-  return { colors: null, accent: null };
+  if (!theme) return null;
+  if (theme.theme && theme.theme.colors) return theme.theme.colors;
+  if (theme.colors) return theme.colors;
+  return null;
 }
 
 function formatUsername(username, authType) {
@@ -128,7 +102,6 @@ module.exports = {
   formatDate,
   slugify,
   buildGradientFromColors,
-  buildGradientFromAccent,
   extractThemePreview,
   formatUsername,
   getScratchUserAvatarURL,

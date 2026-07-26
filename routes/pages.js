@@ -91,6 +91,9 @@ router.get('/theme', (req, res) => {
     authorThemeCount = (authorUser.themes || []).length;
   }
 
+  // Extract preview colors
+  const themeColorsObj = helpers.extractThemePreview(theme);
+
   const data = {
     ...baseData(req),
     ActivePage: 'theme-detail',
@@ -105,7 +108,8 @@ router.get('/theme', (req, res) => {
     AuthorUser: authorUser,
     AuthorAuthType: authorAuthType,
     AuthorThemeCount: authorThemeCount,
-    AuthorJoinDate: authorUser ? helpers.formatDate(authorUser.createdAt) : null
+    AuthorJoinDate: authorUser ? helpers.formatDate(authorUser.createdAt) : null,
+    ThemeColorsObj: themeColorsObj
   };
   res.render('pages/theme-detail', data);
 });
@@ -214,8 +218,8 @@ router.get('/likes', authModule.requireAuthPage, (req, res) => {
       const themeResult = storage.loadThemeFile(t.uuid);
       if (themeResult.ok) {
         const downloads = storage.getDownloadCount(t.uuid);
-        const preview = helpers.extractThemePreview(themeResult.data);
-        likedThemes.push({ ...themeResult.data, colors: preview.colors, accent: preview.accent, likes: ratings.likes, dislikes: ratings.dislikes, downloads });
+        const colors = helpers.extractThemePreview(themeResult.data);
+        likedThemes.push({ ...themeResult.data, colors, likes: ratings.likes, dislikes: ratings.dislikes, downloads });
       }
     }
   }

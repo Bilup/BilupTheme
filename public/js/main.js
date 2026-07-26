@@ -109,7 +109,7 @@ function themeHasColor(card, colorName) {
   const header = card.querySelector('.theme-card-header');
   if (!header) return false;
 
-  const colorsData = header.dataset.colors || header.dataset.accent;
+  const colorsData = header.dataset.colors;
   if (!colorsData) return false;
 
   try {
@@ -118,8 +118,6 @@ function themeHasColor(card, colorName) {
 
     if (data.gradient && Array.isArray(data.gradient)) {
       gradientColors = data.gradient;
-    } else if (data.colors && Array.isArray(data.colors)) {
-      gradientColors = data.colors;
     }
 
     if (gradientColors && gradientColors.length > 0) {

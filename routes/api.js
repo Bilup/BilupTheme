@@ -211,20 +211,11 @@ router.get('/theme/export', async (req, res) => {
   const themeResult = storage.loadThemeFile(uuid);
   if (!themeResult.ok) return res.status(404).json({ ok: false, error: 'theme not found' });
 
-  const themeData = themeResult.data;
-  const themeEntry = themeData.theme;
-  const targetPlatform = platform || (themeData.platform || '').toLowerCase();
-
-  if (!targetPlatform) return res.status(400).json({ ok: false, error: 'could not determine platform' });
-  if (!converter.isSupportedMod(targetPlatform)) {
-    return res.status(400).json({ ok: false, error: `unsupported platform: ${targetPlatform}` });
+  if (!converter.isSupportedMod(platform)) {
+    return res.status(400).json({ ok: false, error: `unsupported platform: ${platform}` });
   }
 
-  const metadata = converter.buildExportMetadata(themeData, themeEntry);
-  const interResult = converter.convertToIntermediate(themeEntry);
-  if (!interResult.ok) return res.status(500).json({ ok: false, error: interResult.error });
-
-  const exportResult = converter.exportToPlatform(interResult.intermediate, targetPlatform, metadata);
+  const exportResult = converter.exportToBilup(themeResult.data);
   if (!exportResult.ok) return res.status(500).json({ ok: false, error: exportResult.error });
 
   // Track download
@@ -242,27 +233,13 @@ router.get('/theme/export', async (req, res) => {
 // Download theme
 router.get('/theme/download', (req, res) => {
   const uuid = req.query.uuid;
-  const platform = (req.query.platform || '').toLowerCase();
-
   if (!uuid) return res.status(400).json({ ok: false, error: 'missing uuid' });
 
   const themeResult = storage.loadThemeFile(uuid);
   if (!themeResult.ok) return res.status(404).json({ ok: false, error: 'theme not found' });
 
   const themeData = themeResult.data;
-  const themeEntry = themeData.theme;
-  const targetPlatform = platform || (themeData.platform || '').toLowerCase();
-
-  if (!targetPlatform) return res.status(400).json({ ok: false, error: 'could not determine platform' });
-  if (!converter.isSupportedMod(targetPlatform)) {
-    return res.status(400).json({ ok: false, error: `unsupported platform: ${targetPlatform}` });
-  }
-
-  const metadata = converter.buildExportMetadata(themeData, themeEntry);
-  const interResult = converter.convertToIntermediate(themeEntry);
-  if (!interResult.ok) return res.status(500).json({ ok: false, error: interResult.error });
-
-  const exportResult = converter.exportToPlatform(interResult.intermediate, targetPlatform, metadata);
+  const exportResult = converter.exportToBilup(themeData);
   if (!exportResult.ok) return res.status(500).json({ ok: false, error: exportResult.error });
 
   if (req.authenticated) {
@@ -272,7 +249,6 @@ router.get('/theme/download', (req, res) => {
   }
 
   const filename = `${uuid}.json`;
-  if (platform) filename = `${uuid}-${platform}.json`;
   res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
   res.json(exportResult.theme);
 });

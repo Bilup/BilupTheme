@@ -8,7 +8,7 @@ var showDate = ShowDate;
 var users = Users;
 %>
 <article class="theme-card" data-uuid="<%= theme.uuid %>" data-name="<%= theme.name %>" data-platform="<%= theme.platform %>" data-created-at="<%= theme.createdAt %>">
-    <div class="theme-card-header" style="<%= (theme.colors ? h.buildGradientFromColors(theme.colors) : (theme.accent ? h.buildGradientFromAccent(theme.accent) : '')) %>" <%- theme.colors ? 'data-colors=\'' + h.toJson(theme.colors) + '\'' : (theme.accent ? 'data-accent=\'' + h.toJson(theme.accent) + '\'' : '') %>>
+    <div class="theme-card-header" style="<%= theme.colors ? h.buildGradientFromColors(theme.colors) : '' %>" <%- theme.colors ? 'data-colors=\'' + h.toJson(theme.colors) + '\'' : '' %>>
         <div class="theme-card-header-left">
         </div>
         <div class="theme-card-actions">

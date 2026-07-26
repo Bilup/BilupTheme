@@ -154,8 +154,8 @@ function listThemes(sortBy = 'newest') {
     const downloads = getDownloadCount(t.uuid);
     // Load full theme file to extract color/gradient preview
     const themeResult = loadThemeFile(t.uuid);
-    const preview = themeResult.ok ? helpers.extractThemePreview(themeResult.data) : { colors: null, accent: null };
-    return { ...t, colors: preview.colors, accent: preview.accent, likes: ratings.likes, dislikes: ratings.dislikes, downloads };
+    const colors = themeResult.ok ? helpers.extractThemePreview(themeResult.data) : null;
+    return { ...t, colors, likes: ratings.likes, dislikes: ratings.dislikes, downloads };
   });
 
   if (sortBy === 'likes') {
@@ -183,11 +183,10 @@ function getUserThemes(username, authType) {
       if (themeResult.ok) {
         const ratings = getRatings(uuid);
         const downloads = getDownloadCount(uuid);
-        const preview = helpers.extractThemePreview(themeResult.data);
+        const colors = helpers.extractThemePreview(themeResult.data);
         themes.push({
           ...themeResult.data,
-          colors: preview.colors,
-          accent: preview.accent,
+          colors,
           likes: ratings.likes,
           dislikes: ratings.dislikes,
           downloads
@@ -366,18 +365,9 @@ function resolveReport(reportId) {
   return { ok: true };
 }
 
-// Theme detection
+// Theme detection — always returns bilup
 function detectPlatform(rawJson) {
   if (!rawJson) return { ok: false, error: 'no data' };
-  if (rawJson.themes && Array.isArray(rawJson.themes)) {
-    return { ok: true, platform: 'mistwarp' };
-  }
-  if (rawJson.colors || (rawJson.accent && rawJson.accent.colors)) {
-    return { ok: true, platform: 'mistwarp' };
-  }
-  if (rawJson.isGradient !== undefined || rawJson.primaryColor) {
-    return { ok: true, platform: 'nitrobolt' };
-  }
   return { ok: true, platform: 'bilup' };
 }
 
