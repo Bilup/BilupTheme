@@ -23,9 +23,9 @@
   },
   "auth": {
     "welcome": "Welcome to BilupTheme",
-    "subtitle": "Sign in with Rotur to upload, report, and manage themes",
+    "subtitle": "Sign in with Bilup Accounts to upload, report, and manage themes",
     "loginWith": "Login with",
-    "learnAboutRotur": "Learn about Rotur",
+    "learnAboutRotur": "Learn about Bilup Accounts",
     "loginFailed": "Login Failed",
     "networkError": "Network Error",
     "tryAgain": "Try Again",

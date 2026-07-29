@@ -23,9 +23,9 @@
   },
   "auth": {
     "welcome": "欢迎来到 BilupTheme",
-    "subtitle": "使用 Rotur 登录以上传、报告和管理主题",
+    "subtitle": "使用 Bilup Accounts 登录以上传、报告和管理主题",
     "loginWith": "使用",
-    "learnAboutRotur": "了解 Rotur",
+    "learnAboutRotur": "了解 Bilup Accounts",
     "loginFailed": "登录失败",
     "networkError": "网络错误",
     "tryAgain": "重试",

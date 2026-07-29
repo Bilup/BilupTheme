@@ -8,7 +8,7 @@ A theme marketplace for Bilup mods — browse, share, and download custom themes
 - **Browse & Search** — Discover themes by name, color, or platform
 - **Upload & Share** — Upload JSON theme files; supports batch upload with auto-detection
 - **Rate & Review** — Like/dislike themes and track popularity
-- **User Profiles** — Sign in with **Rotur** OAuth; manage your themes and likes
+- **User Profiles** — Sign in with **Bilup Accounts** OAuth; manage your themes and likes
 - **Self-Hosted Fonts** — Poppins fonts bundled locally (no external CDN dependency)
 - **Static Build** — Generate fully static HTML for deployment to GitHub Pages or any static host
 
