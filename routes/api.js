@@ -87,7 +87,7 @@ router.post('/auth/login', async (req, res) => {
 
   try {
     // Step 1: exchange token for validator
-    const generateUrl = `https://api.rotur.dev/generate_validator?key=BilupTheme&auth=${encodeURIComponent(token)}`;
+    const generateUrl = `https://api.accounts.bilup.org/generate_validator?key=BilupTheme&auth=${encodeURIComponent(token)}`;
     const genData = await httpGet(generateUrl);
     const genJson = JSON.parse(genData);
     const validator = genJson.validator;
@@ -96,7 +96,7 @@ router.post('/auth/login', async (req, res) => {
     }
 
     // Step 2: verify validator
-    const verifyUrl = `https://api.rotur.dev/v2/validators/verify?v=${encodeURIComponent(validator)}&key=BilupTheme`;
+    const verifyUrl = `https://api.accounts.bilup.org/v2/validators/verify?v=${encodeURIComponent(validator)}&key=BilupTheme`;
     const verData = await httpGet(verifyUrl);
     const verJson = JSON.parse(verData);
 
@@ -122,7 +122,7 @@ router.get('/auth', async (req, res) => {
   if (!v) return res.status(400).json({ ok: false, error: 'missing validator' });
 
   try {
-    const verifyUrl = `https://api.rotur.dev/v2/validators/verify?v=${encodeURIComponent(v)}&key=BilupTheme`;
+    const verifyUrl = `https://api.accounts.bilup.org/v2/validators/verify?v=${encodeURIComponent(v)}&key=BilupTheme`;
     const rawData = await httpGet(verifyUrl);
     const response = JSON.parse(rawData);
 

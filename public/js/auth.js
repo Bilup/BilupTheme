@@ -18,7 +18,7 @@
   if (roturBtn) {
     const next = urlParams.get('next');
     const returnTo = window.location.origin + window.location.pathname + (next ? `?next=${encodeURIComponent(next)}` : '');
-    roturBtn.href = "https://rotur.dev/auth?return_to=".concat(encodeURIComponent(returnTo));
+    roturBtn.href = "https://accounts.bilup.org/auth?return_to=".concat(encodeURIComponent(returnTo));
     console.log('Updated rotur-btn href:', roturBtn.href);
   }
 

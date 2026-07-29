@@ -44,7 +44,7 @@ var users = Users;
                     <img src="<%= h.getScratchUserAvatarURL(author.username) %>" alt="<%= author.username %>" class="author-avatar">
                     <% } %>
                 <% } else if (author.authType === 'rotur') { %>
-                <img src="https://avatars.rotur.dev/<%= author.username %>" alt="<%= author.username %>" class="author-avatar">
+                <img src="https://avatars.accounts.bilup.org/<%= author.username %>" alt="<%= author.username %>" class="author-avatar">
                 <% } else if (author.authType === 'github' && author.avatar) { %>
                 <img src="<%= author.avatar %>" alt="<%= author.username %>" class="author-avatar">
                 <% } else { %>

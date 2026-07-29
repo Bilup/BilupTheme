@@ -22,7 +22,7 @@
                     <img src="<%= h.getScratchUserAvatarURL(ProfileUser.username) %>" alt="<%= ProfileUser.username %>">
                     <% } %>
                 <% } else if (AuthType === 'rotur') { %>
-                <img src="https://avatars.rotur.dev/<%= ProfileUser.username %>" alt="<%= ProfileUser.username %>">
+                <img src="https://avatars.accounts.bilup.org/<%= ProfileUser.username %>" alt="<%= ProfileUser.username %>">
                 <% } else if (AuthType === 'github' && ProfileUser.avatar) { %>
                 <img src="<%= ProfileUser.avatar %>" alt="<%= ProfileUser.username %>">
                 <% } %>
