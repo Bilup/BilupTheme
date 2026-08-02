@@ -20,6 +20,35 @@ function baseData(req) {
   };
 }
 
+// Build users map keyed by author UID from an array of theme objects
+// Each entry: { username, authType, avatar }
+function buildUsersMapFromThemes(themes) {
+  const users = {};
+  const seenIds = new Set();
+  for (const t of themes || []) {
+    const authorId = t.author;
+    if (!authorId || seenIds.has(authorId)) continue;
+    seenIds.add(authorId);
+    const authType = t.authType || 'rotur';
+    const userResult = storage.getUser(authorId, authType);
+    if (userResult.ok) {
+      users[authorId] = {
+        username: userResult.user.username || t.authorUsername || authorId,
+        authType: userResult.user.authType || authType,
+        avatar: userResult.user.avatar || ''
+      };
+    } else {
+      // Fallback: create entry from theme's authorUsername
+      users[authorId] = {
+        username: t.authorUsername || authorId,
+        authType: authType,
+        avatar: ''
+      };
+    }
+  }
+  return users;
+}
+
 // Home
 router.get('/', (req, res) => {
   const data = { ...baseData(req), ActivePage: 'home' };
@@ -37,9 +66,8 @@ router.get('/themes', (req, res) => {
     themes = themes.filter(t => (t.platform || '').toLowerCase() === platformFilter.toLowerCase());
   }
 
-  // Get all users for author display
-  const users = {};
-  // We'll load user data on-demand via the template
+  // Build users map for author display (keyed by UID)
+  const users = buildUsersMapFromThemes(themes);
 
   const data = {
     ...baseData(req),
@@ -220,16 +248,34 @@ router.get('/likes', authModule.requireAuthPage, (req, res) => {
       if (themeResult.ok) {
         const downloads = storage.getDownloadCount(t.uuid);
         const preview = helpers.extractThemePreview(themeResult.data);
-        likedThemes.push({ ...themeResult.data, colors: preview.colors, accent: preview.accent, likes: ratings.likes, dislikes: ratings.dislikes, downloads });
+        // Backfill authorUsername for legacy entries via user lookup
+        let authorUsername = themeResult.data.authorUsername;
+        if (!authorUsername && themeResult.data.author) {
+          const u = storage.getUser(themeResult.data.author, themeResult.data.authType || 'rotur');
+          if (u.ok && u.user.username) authorUsername = u.user.username;
+          else authorUsername = themeResult.data.author;
+        }
+        likedThemes.push({
+          ...themeResult.data,
+          authorUsername,
+          authType: themeResult.data.authType || t.authType || 'rotur',
+          colors: preview.colors,
+          accent: preview.accent,
+          likes: ratings.likes,
+          dislikes: ratings.dislikes,
+          downloads
+        });
       }
     }
   }
+
+  const users = buildUsersMapFromThemes(likedThemes);
 
   const data = {
     ...baseData(req),
     ActivePage: 'likes',
     Themes: likedThemes,
-    Users: {}
+    Users: users
   };
   res.render('pages/likes', data);
 });

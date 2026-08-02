@@ -35,11 +35,20 @@ function saveThemeIndex(index) {
 // Theme CRUD
 function createUserTheme(themeData, userId, authType) {
   const uuid = `theme-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+  // Look up display name from user
+  let authorUsername = userId; // fallback to UID
+  const userLookup = getUser(userId, authType);
+  if (userLookup.ok && userLookup.user.username) {
+    authorUsername = userLookup.user.username;
+  }
+
   const themeEntry = {
     uuid,
     name: themeData.name,
     description: themeData.description || '',
     author: userId,
+    authorUsername,
     authType,
     platform: themeData.platform,
     createdAt: new Date().toISOString(),
@@ -54,6 +63,7 @@ function createUserTheme(themeData, userId, authType) {
     uuid,
     name: themeData.name,
     author: userId,
+    authorUsername,
     platform: themeData.platform,
     createdAt: themeEntry.createdAt,
     size: themeEntry.size
@@ -76,6 +86,15 @@ function getTheme(uuid) {
   if (!fs.existsSync(filePath)) return { ok: false, error: 'theme not found' };
   try {
     const theme = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    // Backfill authorUsername for legacy themes
+    if (!theme.authorUsername && theme.author) {
+      const user = getUser(theme.author, theme.authType || 'rotur');
+      if (user.ok && user.user.username) {
+        theme.authorUsername = user.user.username;
+      } else {
+        theme.authorUsername = theme.author;
+      }
+    }
     return { ok: true, theme };
   } catch { return { ok: false, error: 'failed to read theme' }; }
 }
@@ -84,7 +103,17 @@ function loadThemeFile(uuid) {
   const filePath = path.join(THEMES_DIR, `${uuid}.json`);
   if (!fs.existsSync(filePath)) return { ok: false };
   try {
-    return { ok: true, data: JSON.parse(fs.readFileSync(filePath, 'utf8')) };
+    const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    // Backfill authorUsername for legacy themes
+    if (!data.authorUsername && data.author) {
+      const user = getUser(data.author, data.authType || 'rotur');
+      if (user.ok && user.user.username) {
+        data.authorUsername = user.user.username;
+      } else {
+        data.authorUsername = data.author;
+      }
+    }
+    return { ok: true, data };
   } catch { return { ok: false }; }
 }
 
@@ -148,15 +177,30 @@ function listThemes(sortBy = 'newest') {
   const index = loadThemeIndex();
   let themes = Object.values(index.themes || {});
 
+  // Backfill authorUsername for legacy index entries
+  themes = themes.map(t => {
+    if (!t.authorUsername && t.author) {
+      // Try to get from full theme file first (it may be enriched there), fallback to user lookup
+      const user = getUser(t.author, 'rotur');
+      if (user.ok && user.user.username) {
+        t.authorUsername = user.user.username;
+      } else {
+        t.authorUsername = t.author;
+      }
+    }
+    return t;
+  });
+
   // Enrich with ratings, downloads, color preview data, and description
   themes = themes.map(t => {
     const ratings = getRatings(t.uuid);
     const downloads = getDownloadCount(t.uuid);
-    // Load full theme file to extract color/gradient preview and description
+    // Load full theme file to extract color/gradient preview, description, and authType
     const themeResult = loadThemeFile(t.uuid);
     const preview = themeResult.ok ? helpers.extractThemePreview(themeResult.data) : { colors: null, accent: null };
     const description = themeResult.ok ? themeResult.data.description : '';
-    return { ...t, description, colors: preview.colors, accent: preview.accent, likes: ratings.likes, dislikes: ratings.dislikes, downloads };
+    const authType = themeResult.ok ? (themeResult.data.authType || t.authType) : (t.authType || 'rotur');
+    return { ...t, authType, description, colors: preview.colors, accent: preview.accent, likes: ratings.likes, dislikes: ratings.dislikes, downloads };
   });
 
   if (sortBy === 'likes') {
