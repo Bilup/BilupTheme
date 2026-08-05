@@ -108,9 +108,9 @@ router.post('/auth/login', async (req, res) => {
     const userId = verJson.id;
     const displayName = verJson.username || userId;
     const userData = { username: displayName, userId: userId, authType: 'rotur', avatar: '' };
-    createUserSession(res, userId, 'rotur', userData);
+    const sessionId = createUserSession(res, userId, 'rotur', userData);
 
-    res.json({ ok: true, username: displayName });
+    res.json({ ok: true, username: displayName, token: sessionId });
   } catch (err) {
     res.status(500).json({ ok: false, error: 'auth error: ' + err.message });
   }
@@ -133,9 +133,9 @@ router.get('/auth', async (req, res) => {
     const userId = response.id;
     const displayName = response.username || userId;
     const userData = { username: displayName, userId: userId, authType: 'rotur', avatar: '' };
-    createUserSession(res, userId, 'rotur', userData);
+    const sessionId = createUserSession(res, userId, 'rotur', userData);
 
-    res.json({ ok: true });
+    res.json({ ok: true, token: sessionId });
   } catch (err) {
     res.status(500).json({ ok: false, error: 'auth error: ' + err.message });
   }

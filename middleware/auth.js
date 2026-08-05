@@ -3,7 +3,11 @@ const storage = require('../utils/storage');
 const ADMIN_USERS = ['mist'];
 
 function authMiddleware(req, res, next) {
-  const token = req.cookies?.auth_token;
+  let token = req.cookies?.auth_token;
+  const bearer = (req.headers.authorization || '').startsWith('Bearer ')
+    ? req.headers.authorization.slice(7)
+    : null;
+  if (!token && bearer) token = bearer;
   if (token) {
     const session = storage.getSession(token);
     if (session) {
