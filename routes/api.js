@@ -327,6 +327,12 @@ router.post('/theme', requireAuth, (req, res) => {
     const themeName = item.name.trim();
     const themeDescription = (item.description || '');
     const platform = item.platform.toLowerCase();
+
+    if (!item.themeJson || typeof item.themeJson !== 'object' || Array.isArray(item.themeJson)) {
+      errors.push(`theme '${themeName}' has invalid theme data`);
+      continue;
+    }
+
     const jsonStr = JSON.stringify(item.themeJson);
     const themeSize = jsonStr.length;
 

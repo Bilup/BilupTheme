@@ -24,8 +24,14 @@ function ensureDirectories() {
 // Theme Index
 function loadThemeIndex() {
   try {
-    return JSON.parse(fs.readFileSync(INDEX_FILE, 'utf8'));
-  } catch { return { themes: {} }; }
+    const parsed = JSON.parse(fs.readFileSync(INDEX_FILE, 'utf8'));
+    // Guard against files that parse fine but have a wrong/missing shape (e.g. `{}`)
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+      if (!parsed.themes || typeof parsed.themes !== 'object') parsed.themes = {};
+      return parsed;
+    }
+  } catch { /* fall through to default */ }
+  return { themes: {} };
 }
 
 function saveThemeIndex(index) {
@@ -146,7 +152,12 @@ function deleteTheme(uuid, userId, isAdmin) {
   const filePath = path.join(THEMES_DIR, `${uuid}.json`);
   if (!fs.existsSync(filePath)) return { ok: false, error: 'theme not found' };
 
-  const theme = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  let theme;
+  try {
+    theme = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch {
+    return { ok: false, error: 'theme file corrupted' };
+  }
   if (theme.author !== userId && !isAdmin) return { ok: false, error: 'not authorized' };
 
   fs.unlinkSync(filePath);
@@ -296,7 +307,9 @@ function getSession(sessionId) {
   if (!fs.existsSync(filePath)) return null;
   try {
     const session = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    if (new Date(session.expiresAt) < new Date()) {
+    const expiresAt = new Date(session.expiresAt).getTime();
+    // Treat missing/invalid expiresAt as expired so stale sessions are cleaned up
+    if (!expiresAt || expiresAt < Date.now()) {
       fs.unlinkSync(filePath);
       return null;
     }
@@ -361,6 +374,8 @@ function recordDownload(uuid, userId) {
   if (fs.existsSync(filePath)) {
     try { data = JSON.parse(fs.readFileSync(filePath, 'utf8')); } catch {}
   }
+  if (!data || typeof data !== 'object' || Array.isArray(data)) data = {};
+  if (!Array.isArray(data.users)) data.users = [];
   if (!data.users.includes(userId)) {
     data.users.push(userId);
     data.count = data.users.length;
@@ -380,8 +395,14 @@ function hasDownloaded(uuid, userId) {
 // Reports
 function getReports() {
   try {
-    return JSON.parse(fs.readFileSync(REPORTS_FILE, 'utf8'));
-  } catch { return { reports: [] }; }
+    const parsed = JSON.parse(fs.readFileSync(REPORTS_FILE, 'utf8'));
+    // Guard against files that parse fine but have a wrong/missing shape
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+      if (!Array.isArray(parsed.reports)) parsed.reports = [];
+      return parsed;
+    }
+  } catch { /* fall through to default */ }
+  return { reports: [] };
 }
 
 function saveReports(data) {

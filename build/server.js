@@ -24,6 +24,14 @@ function startServer() {
   app.use(express.json({ limit: '256kb' }));
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
+
+  // Ensure req.body is always an object (it is undefined when the request
+  // carries no JSON/form body or uses a different Content-Type)
+  app.use((req, res, next) => {
+    if (!req.body || typeof req.body !== 'object') req.body = {};
+    next();
+  });
+
   app.use('/static', express.static(path.join(ROOT, 'public')));
   app.use('/favicon.ico', express.static(path.join(ROOT, 'favicon.ico')));
   
@@ -74,6 +82,16 @@ function startServer() {
   app.use('/', require('../routes/pages'));
 
   app.use((err, req, res, next) => {
+    // Body-parser errors (malformed/oversized JSON) are client-side 4xx issues, not server errors
+    if (err.type === 'entity.parse.failed') {
+      return res.status(400).json({ ok: false, error: 'invalid JSON in request body' });
+    }
+    if (err.type === 'entity.too.large') {
+      return res.status(413).json({ ok: false, error: 'request body too large' });
+    }
+    if (err.status && err.status >= 400 && err.status < 500) {
+      return res.status(err.status).json({ ok: false, error: err.message || 'bad request' });
+    }
     console.error('Server error:', err);
     res.status(500).json({ ok: false, error: 'internal server error' });
   });
